@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.CardView
+        android:layout_margin="5dp"
+        app:cardCornerRadius="8dp"
+        android:elevation="12dp"
+        app:cardBackgroundColor="@android:color/white"
+        android:layout_width="match_parent"
+        android:innerRadius="0dp"
+        android:shape="ring"
+        android:thicknessRatio="1.9"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.rilixtech.materialfancybutton.MaterialFancyButton
+                android:id="@+id/btnInfo"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginRight="10dp"
+                app:mfb_defaultColor="@color/darkBlue"
+                app:mfb_focusColor="@android:color/white"
+                app:mfb_radius="25dp"
+                app:mfb_text=""
+                app:mfb_icon="@string/fawi_info"
+                app:mfb_fontIconSize="14dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp" />
+
+            <com.rilixtech.materialfancybutton.MaterialFancyButton
+                android:id="@+id/btnData"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginRight="10dp"
+                app:mfb_defaultColor="@color/colorPrimaryDark"
+                app:mfb_focusColor="@android:color/white"
+                app:mfb_radius="25dp"
+                app:mfb_text=""
+                app:mfb_icon="@string/fawi_database"
+                app:mfb_fontIconSize="14dp"
+                android:layout_toLeftOf="@id/btnInfo"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp" />
+
+            <com.rilixtech.materialfancybutton.MaterialFancyButton
+                android:id="@+id/btnRegisterPhoto"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginRight="10dp"
+                app:mfb_defaultColor="@color/darkBlue"
+                app:mfb_focusColor="@android:color/white"
+                app:mfb_radius="25dp"
+                app:mfb_text=""
+                app:mfb_icon="@string/fawi_camera_retro"
+                app:mfb_fontIconSize="14dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp" />
+
+            <com.rilixtech.materialfancybutton.MaterialFancyButton
+                android:id="@+id/btnRegisterVideo"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginRight="10dp"
+                app:mfb_defaultColor="@color/colorPrimaryDark"
+                app:mfb_focusColor="@android:color/white"
+                app:mfb_radius="25dp"
+                app:mfb_text=""
+                app:mfb_icon="@string/fawi_video_camera"
+                app:mfb_fontIconSize="14dp"
+                android:layout_toLeftOf="@id/btnRegisterPhoto"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp" />
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:layout_height="85dp">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="Rama 1"
+                        android:id="@+id/txtBranch"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/txtProgress"
+                        android:text=""
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/syncContainer"
+                    android:visibility="visible"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text=""
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:id="@+id/txtType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_marginLeft="10dp"
+                        android:text=""
+                        android:id="@+id/txtFrames"
+                        android:textSize="12sp"
+                        android:textStyle="italic|bold"
+                        android:textColor="@color/darkGreen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout></RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

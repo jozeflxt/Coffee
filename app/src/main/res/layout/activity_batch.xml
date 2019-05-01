@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@color/lightGray"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    tools:context=".BatchActivity">
+    <com.rilixtech.materialfancybutton.MaterialFancyButton
+        android:id="@+id/btnAddBatch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        app:mfb_defaultColor="@color/darkGreen"
+        app:mfb_focusColor="@android:color/white"
+        app:mfb_icon="@string/fawi_plus"
+        app:mfb_iconPosition="left"
+        app:mfb_radius="30dp"
+        app:mfb_textSize="18sp"
+        app:mfb_text="Registrar Lote"
+        android:layout_marginBottom="20dp"
+        app:mfb_textColor="#FFFFFF" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        app:layout_constraintBottom_toBottomOf="@id/btnAddBatch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+</LinearLayout>

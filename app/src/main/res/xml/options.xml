@@ -1,0 +1,27 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Configuraciones de Toma">
+        <CheckBoxPreference
+            android:key="autoFocus"
+            android:title="Auto Enfoque"
+            android:summary="La cámara mantendrá el autoenfoque luego de enfocar la primera vez" />
+        <EditTextPreference
+            android:key="timeFreeze"
+            android:inputType="number"
+            android:title="Tiempo Espera"
+            android:summary="Tiempo de espera entre fotos"
+            android:dialogTitle="Introduce valor" />
+        <com.lexot.cenicafe.Views.PercentagePreference
+            android:key="focusSquare"
+            android:title="Área de enfoque"
+            android:summary="Porcentaje de pantalla de enfoque"
+            android:defaultValue="75" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Preferencias Generales">
+        <CheckBoxPreference
+            android:key="onlyWifi"
+            android:title="Usar solo Wifi"
+            android:defaultValue="true"
+            android:summary="Se usará solo Wifi para la sincronización. En caso contrario, se usará cualquier red" />
+    </PreferenceCategory>
+</PreferenceScreen>

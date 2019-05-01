@@ -1,0 +1,64 @@
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cen="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:rowCount="3"
+    app:columnCount="2">
+    <com.lexot.cenicafe.Views.ButtonHome
+        app:layout_rowWeight="1"
+        cen:colorBH="@color/darkGreen"
+        cen:imageBH="@drawable/add"
+        cen:titleBH="Lotes"
+        cen:idBH="1"
+        android:clickable="true"
+        app:layout_columnWeight="1"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+    <com.lexot.cenicafe.Views.ButtonHome
+        app:layout_rowWeight="1"
+        cen:colorBH="@color/lightBrown"
+        cen:imageBH="@drawable/video"
+        cen:titleBH="Fotos"
+        android:clickable="true"
+        cen:idBH="2"
+        app:layout_columnWeight="1"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+    <com.lexot.cenicafe.Views.ButtonHome
+        app:layout_rowWeight="1"
+        cen:colorBH="@color/lightGreen"
+        cen:imageBH="@drawable/mapa_icono"
+        cen:titleBH="Mapa"
+        cen:idBH="3"
+        app:layout_columnWeight="1"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+    <com.lexot.cenicafe.Views.ButtonHome
+        app:layout_rowWeight="1"
+        cen:colorBH="@color/darkBrown"
+        cen:imageBH="@drawable/report"
+        cen:titleBH="Reporte"
+        app:layout_columnWeight="1"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+    <com.lexot.cenicafe.Views.ButtonHome
+        app:layout_rowWeight="1"
+        cen:colorBH="@color/brown"
+        cen:imageBH="@drawable/message"
+        cen:titleBH="Configuración"
+        cen:idBH="6"
+        app:layout_columnWeight="1"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+    <com.lexot.cenicafe.Views.ButtonHome
+        app:layout_rowWeight="1"
+        cen:colorBH="@color/darkGreen"
+        cen:imageBH="@drawable/log"
+        cen:titleBH="Historial"
+        cen:idBH="5"
+        android:clickable="true"
+        app:layout_columnWeight="1"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+</android.support.v7.widget.GridLayout>

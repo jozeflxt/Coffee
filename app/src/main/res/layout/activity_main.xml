@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <SurfaceView
+        android:id="@+id/surfaceview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tvRecording"
+        android:padding="10dp"
+        tools:text="Grabando"
+        android:visibility="invisible"
+        android:layout_margin="30dp"
+        android:textSize="30sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Chronometer
+        android:id="@+id/chronometerTIME"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:textSize="30sp"
+        android:visibility="invisible"
+        android:layout_above="@+id/tvRecording"
+        android:layout_alignEnd="@+id/tvRecording"
+        android:layout_marginEnd="129dp" />
+
+</RelativeLayout>

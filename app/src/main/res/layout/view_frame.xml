@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.CardView
+        android:layout_margin="5dp"
+        app:cardCornerRadius="8dp"
+        android:elevation="12dp"
+        android:clipChildren="true"
+        app:cardBackgroundColor="@android:color/white"
+        android:layout_width="match_parent"
+        android:innerRadius="0dp"
+        android:shape="ring"
+        android:thicknessRatio="1.9"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:clickable="true"
+                android:id="@+id/icon"
+                android:text="Branch XXXX"
+                android:layout_width="150dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:layout_marginRight="10dp"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:textSize="16sp"
+                android:id="@+id/lblTime"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/icon"
+                android:text="Momento: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/txtTime"
+                android:layout_toRightOf="@id/lblTime"
+                android:layout_alignTop="@id/lblTime"
+                android:text="234ms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:textSize="16sp"
+                android:layout_below="@id/lblTime"
+                android:id="@+id/lblFactor"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@id/icon"
+                android:text="Factor: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="5dp"
+                android:textAllCaps="true"
+                android:id="@+id/txtFactor"
+                android:layout_toRightOf="@id/lblFactor"
+                android:layout_alignTop="@id/lblFactor"
+                android:text="23455"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:textSize="16sp"
+                android:textStyle="italic"
+                android:layout_marginTop="10dp"
+                android:id="@+id/txtProgress"
+                android:layout_toRightOf="@id/icon"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_below="@id/lblFactor"
+                android:text="Sincronizando 55%"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>
