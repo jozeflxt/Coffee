@@ -45,7 +45,7 @@ public class CoffeeRepository {
                 RequestBody.create(MediaType.parse("multipart/form-data"),coffeeTree.Lng.toString()));
     }
 
-    public Call<DefaultResponse> PostCoffeeBranch(CoffeeBranch coffeeBranch, RequestBody file, Integer parentBackedId) {
+    public Call<DefaultResponse> PostCoffeeBranch(CoffeeBranch coffeeBranch, Integer parentBackedId) {
         RequestBody date =
                 RequestBody.create(MediaType.parse("multipart/form-data"),new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         return apiService.postCoffeeBranch(
@@ -53,8 +53,7 @@ public class CoffeeRepository {
                 RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBranch.Type.toString()),
                 RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBranch.Index.toString()),
                 date,
-                RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBranch.StemId.toString()),
-                file);
+                RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBranch.StemId.toString()));
     }
 
     public Call<DefaultResponse> PostCoffeeFrame(CoffeeFrame coffeeFrame, RequestBody file, Integer parentBackedId) {

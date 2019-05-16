@@ -1,10 +1,13 @@
 package com.lexot.cenicafe;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -13,6 +16,11 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,32 +31,26 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.lexot.cenicafe.Models.BLL;
-import com.lexot.cenicafe.Models.CoffeeLatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BatchMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class TrackGPSActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
-    public static String CREATING_PARAM = "creatingParam";
-    public static String BATCH_ID_PARAM = "batchIdParam";
+    public static String MAP_LAT_RESULT = "mapLatResult";
+    public static String MAP_LNG_RESULT = "mapLngResult";
     private PolygonOptions rectOptions;
     private Polygon polygon;
-    private List<LatLng> coordinates = new ArrayList<>();
-    private boolean isCreating;
-    private BLL bll;
-    private int batchId;
+    private List<Marker> markers = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_batch_map);
-        isCreating = getIntent().getBooleanExtra(CREATING_PARAM,true);
-        batchId = getIntent().getIntExtra(BATCH_ID_PARAM,0);
-        bll = new BLL(this);
         FloatingActionButton fab = findViewById(R.id.fab);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -58,11 +60,8 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isCreating) {
-                    coordinates.add(new LatLng(2.0,2.0));
-                    bll.createCoordinates(coordinates, batchId);
-                }
-                setResult(RESULT_OK);
+                Intent resultIntent = new Intent();
+                setResult(RESULT_OK, resultIntent);
                 finish();
             }
         });
@@ -91,49 +90,22 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onMyLocationChange(Location location) {
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 20));
-                mMap.setOnMyLocationChangeListener(null);
+                Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).draggable(true));
+                markers.add(marker);
+                if (polygon == null) {
+                    rectOptions.add(new LatLng(location.getLatitude(), location.getLongitude()));
+                    polygon = mMap.addPolygon(rectOptions);
+                }
+                drawRegion();
             }
         });
-        if (isCreating) {
-            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-                @Override
-                public void onMapLongClick(LatLng latLng) {
-                    mMap.addMarker(new MarkerOptions().position(latLng).draggable(true));
-                    coordinates.add(latLng);
-                    if (polygon == null) {
-                        rectOptions.add(latLng);
-                        polygon = mMap.addPolygon(rectOptions);
-                    }
-                    drawRegion();
-                }
-            });
-            mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                @Override
-                public void onMarkerDragStart(Marker marker) {
-                    drawRegion();
-                }
-
-                @Override
-                public void onMarkerDrag(Marker marker) {
-                    drawRegion();
-                }
-
-                @Override
-                public void onMarkerDragEnd(Marker marker) {
-                    drawRegion();
-                }
-            });
-        } else {
-            ArrayList<CoffeeLatLng> coffeeLatLngs = bll.getCoordinates(batchId);
-            for (int j=0; j<=coffeeLatLngs.size() - 1; j++) {
-                coordinates.add(new LatLng(coffeeLatLngs.get(j).Lat, coffeeLatLngs.get(j).Lng));
-            }
-            drawRegion();
-        }
     }
 
     public void drawRegion() {
-        polygon.setPoints(coordinates);
+        List<LatLng> points = new ArrayList<>();
+        for (Marker m: markers) {
+            points.add(m.getPosition());
+        }
+        polygon.setPoints(points);
     }
-
 }

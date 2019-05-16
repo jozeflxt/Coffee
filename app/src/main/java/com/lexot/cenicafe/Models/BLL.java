@@ -9,8 +9,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.lexot.cenicafe.ContentProvider.BatchContract;
 import com.lexot.cenicafe.ContentProvider.BranchContract;
+import com.lexot.cenicafe.ContentProvider.CoordinateContract;
 import com.lexot.cenicafe.ContentProvider.FrameContract;
 import com.lexot.cenicafe.ContentProvider.TreeContract;
 import com.lexot.cenicafe.DataBase.CoffeeDbHelper;
@@ -22,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BLL {
@@ -48,7 +51,7 @@ public class BLL {
             coffeeBatch.BranchesAmmount = cursor.getInt(cursor.getColumnIndexOrThrow(BatchContract.BatchColumns.BRANCHES));
             coffeeBatch.Stems = cursor.getInt(cursor.getColumnIndexOrThrow(BatchContract.BatchColumns.STEMS));
             coffeeBatch.Trees = cursor.getInt(cursor.getColumnIndexOrThrow(BatchContract.BatchColumns.TREES));
-            coffeeBatch.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(BatchContract.BatchColumns.SYNCED)) == 2;
+            coffeeBatch.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(BatchContract.BatchColumns.SYNCED));
             coffeeBatch.BackendId = cursor.getInt(cursor.getColumnIndexOrThrow(BatchContract.BatchColumns.REAL_ID));
             batches.add(coffeeBatch);
             cursor.moveToNext();
@@ -67,7 +70,7 @@ public class BLL {
             coffeeBatch.BranchesAmmount = cursor.getInt(cursor.getColumnIndexOrThrow(BatchContract.BatchColumns.BRANCHES));
             coffeeBatch.Stems = cursor.getInt(cursor.getColumnIndexOrThrow(BatchContract.BatchColumns.STEMS));
             coffeeBatch.Trees = cursor.getInt(cursor.getColumnIndexOrThrow(BatchContract.BatchColumns.TREES));
-            coffeeBatch.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(BatchContract.BatchColumns.SYNCED)) == 2;
+            coffeeBatch.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(BatchContract.BatchColumns.SYNCED));
             coffeeBatch.BackendId = cursor.getInt(cursor.getColumnIndexOrThrow(BatchContract.BatchColumns.REAL_ID));
         }
         cursor.close();
@@ -194,8 +197,6 @@ public class BLL {
             coffeeBranch.StemId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.STEM_ID));
             coffeeBranch.Type = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TYPE));
             coffeeBranch.Date = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.DATE));
-            coffeeBranch.Data = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.DATA));
-            coffeeBranch.Info = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.INFO));
             coffeeBranch.FramesCount = cursor.getInt(cursor.getColumnIndexOrThrow("FramesCount"));
             branches.add(coffeeBranch);
             cursor.moveToNext();
@@ -226,8 +227,6 @@ public class BLL {
             coffeeBranch.StemId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.STEM_ID));
             coffeeBranch.Type = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TYPE));
             coffeeBranch.Date = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.DATE));
-            coffeeBranch.Data = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.DATA));
-            coffeeBranch.Info = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.INFO));
             coffeeBranch.FramesCount = cursor.getInt(cursor.getColumnIndexOrThrow("FramesCount"));
             branches.add(coffeeBranch);
             cursor.moveToNext();
@@ -258,8 +257,6 @@ public class BLL {
             coffeeBranch.StemId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.STEM_ID));
             coffeeBranch.Type = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TYPE));
             coffeeBranch.Date = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.DATE));
-            coffeeBranch.Data = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.DATA));
-            coffeeBranch.Info = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.INFO));
             coffeeBranch.TreeBackendId = cursor.getInt(cursor.getColumnIndexOrThrow("TreeBackendId"));
             branches.add(coffeeBranch);
             cursor.moveToNext();
@@ -277,10 +274,8 @@ public class BLL {
             coffeeBranch.StemId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.STEM_ID));
             coffeeBranch.TreeId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TREE_ID));
             coffeeBranch.Type = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TYPE));
-            coffeeBranch.Data = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.DATA));
             coffeeBranch.BackendId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.REAL_ID));
             coffeeBranch.Date = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.DATE));
-            coffeeBranch.Info = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.INFO));
             coffeeBranch.VideoUrl = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.VIDEO));
 
             //coffeeBranch.Path =
@@ -288,14 +283,12 @@ public class BLL {
         return coffeeBranch;
     }
 
-    public int updateBranch(Integer branchId, String videoPath, String dataSensores, String message) {
+    public int updateBranch(Integer branchId, String videoPath) {
         ContentValues mNewValues = new ContentValues();
         if(!videoPath.equals("")) {
             mNewValues.put(BranchContract.BranchColumns.VIDEO,videoPath);
         }
-        mNewValues.put(BranchContract.BranchColumns.DATA,dataSensores);
         mNewValues.put(BranchContract.BranchColumns.SYNCED,1);
-        mNewValues.put(BranchContract.BranchColumns.INFO,message);
         //Guardar en Base de datos
         return mContentResolver.update(Uri.withAppendedPath(BranchContract.BRANCH_URI,branchId.toString()), mNewValues,null,null);
     }
@@ -383,7 +376,7 @@ public class BLL {
         mNewValues.put(BatchContract.BatchColumns.NAME, coffeeBatch.Name);
         mNewValues.put(BatchContract.BatchColumns.STEMS, coffeeBatch.Stems);
         mNewValues.put(BatchContract.BatchColumns.TREES, coffeeBatch.Trees);
-        mNewValues.put(FrameContract.FrameColumns.SYNCED, 1);
+        mNewValues.put(FrameContract.FrameColumns.SYNCED, 0);
         Uri uriInsertBatch = mContentResolver.insert(BatchContract.BATCH_URI, mNewValues);
         Long batchId = ContentUris.parseId(uriInsertBatch);
         if (batchId > 0) {
@@ -410,6 +403,37 @@ public class BLL {
         } else {
             return 0;
         }
+    }
+
+    public int createCoordinates(List<LatLng> coordinates, Integer batchId) {
+        for (int i=0; i<=coordinates.size() - 1; i++) {
+            ContentValues mNewValues = new ContentValues();
+            mNewValues.put(CoordinateContract.CoordinateColumns.LAT, coordinates.get(i).latitude);
+            mNewValues.put(CoordinateContract.CoordinateColumns.LNG, coordinates.get(i).longitude);
+            mNewValues.put(CoordinateContract.CoordinateColumns.INDEX, i);
+            mNewValues.put(CoordinateContract.CoordinateColumns.BATCH_ID, batchId);
+            Uri uriInsertFrame = mContentResolver.insert(CoordinateContract.COORDINATE_URI, mNewValues);
+        }
+        ContentValues mNewValues = new ContentValues();
+        mNewValues.put(BranchContract.BranchColumns.SYNCED,1);
+        //Guardar en Base de datos
+        return mContentResolver.update(Uri.withAppendedPath(BatchContract.BATCH_URI,batchId.toString()), mNewValues,null,null);
+    }
+    public ArrayList<CoffeeLatLng> getCoordinates(Integer batchId) {
+        ArrayList<CoffeeLatLng> coordinates = new ArrayList<CoffeeLatLng>();
+        Cursor cursor = mContentResolver.query(CoordinateContract.COORDINATE_URI, null, CoordinateContract.CoordinateColumns.BATCH_ID + "="+batchId.toString(), null, null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()) {
+            CoffeeLatLng coordinate = new CoffeeLatLng();
+            coordinate.BatchId = cursor.getInt(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.BATCH_ID));
+            coordinate.Lat = cursor.getDouble(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.LAT));
+            coordinate.Lng = cursor.getDouble(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.LNG));
+            coordinate.Index = cursor.getInt(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.INDEX));
+            coordinates.add(coordinate);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return coordinates;
     }
 
     public int createFrame(CoffeeFrame coffeeFrame) {

@@ -1,14 +1,12 @@
 package com.lexot.cenicafe;
 
-import android.content.Context;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
-import android.hardware.SensorManager;
-import android.location.LocationManager;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -31,7 +29,6 @@ import com.lexot.cenicafe.Models.CoffeeBranch;
 import com.lexot.cenicafe.Models.CoffeeFrame;
 import com.lexot.cenicafe.Services.VideoSplitService;
 import com.lexot.cenicafe.Utils.DrawingView;
-import com.lexot.cenicafe.Utils.SensorSamplingManager;
 import com.lexot.cenicafe.Utils.Utilities;
 
 import java.io.ByteArrayOutputStream;
@@ -66,7 +63,6 @@ public class MainActivity extends BaseActivity implements
     private CoffeeBranch coffeeBranch = new CoffeeBranch();
     private BLL bll;
 
-    private SensorSamplingManager sensorSamplingManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +75,6 @@ public class MainActivity extends BaseActivity implements
         } else {
             finish();
         }
-        sensorSamplingManager = new SensorSamplingManager((SensorManager)getSystemService(Context.SENSOR_SERVICE), (LocationManager) getSystemService(Context.LOCATION_SERVICE));
         createFolder();
         setContentView(R.layout.activity_main);
         setupSurface();
@@ -153,8 +148,6 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        //Detener sensores
-        sensorSamplingManager.stopSampling();
     }
 
     @Override
@@ -187,13 +180,11 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void saveData() {
-        Utilities.writeToFile(myDirectory,"Sensores.txt",sensorSamplingManager.getSensorInfo(focusModes).getBytes(StandardCharsets.UTF_8));
-        Utilities.writeToFile(myDirectory,"DatosSensores.txt",sensorSamplingManager.getSensorData().getBytes(StandardCharsets.UTF_8));
         String videoPath = "";
         if(isVideo) {
             videoPath = videoFile.getPath();
         }
-        int changes = bll.updateBranch(coffeeBranch.Id, videoPath, sensorSamplingManager.getSensorData(), sensorSamplingManager.getSensorInfo(focusModes));
+        int changes = bll.updateBranch(coffeeBranch.Id, videoPath);
         //Iniciar servicio para cortar video
         if(changes > 0 && isVideo) {
             Intent videoSplitService = new Intent(context, VideoSplitService.class);
@@ -235,13 +226,11 @@ public class MainActivity extends BaseActivity implements
                     releaseCameraAndPreview();
                     onBackPressed();
                 } else {
-                    sensorSamplingManager.startSampling();
                     recording = true;
                     mCamera.unlock();
                     mediaRecorder.start();
                 }
             } else {
-                sensorSamplingManager.startSampling();
                 startRecording = System.currentTimeMillis();
                 mCamera.setOneShotPreviewCallback(new Camera.PreviewCallback() {
 

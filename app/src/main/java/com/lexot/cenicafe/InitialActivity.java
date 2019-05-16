@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.maps.model.Marker;
 import com.lexot.cenicafe.ContentProvider.BranchContract;
 import com.lexot.cenicafe.Services.SyncService;
 
@@ -22,6 +23,7 @@ public class InitialActivity extends BaseActivity {
     private static final String[] INITIAL_PERMS={
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.CAMERA,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };

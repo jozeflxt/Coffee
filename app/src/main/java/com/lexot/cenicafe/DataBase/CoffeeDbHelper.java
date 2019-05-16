@@ -34,6 +34,7 @@ public class CoffeeDbHelper extends SQLiteOpenHelper {
         db.execSQL(DatabaseContract.Trees.SQL_CREATE_TREES_TABLE);
         db.execSQL(DatabaseContract.Branches.SQL_CREATE_BRANCHES_TABLE);
         db.execSQL(DatabaseContract.Frames.SQL_CREATE_FRAMES_TABLE);
+        db.execSQL(DatabaseContract.Coordinates.SQL_CREATE_COORDINATES_TABLE);
     }
 
     // Cambia la version del esquema en caso de haber modificaciones.
@@ -44,6 +45,7 @@ public class CoffeeDbHelper extends SQLiteOpenHelper {
         db.execSQL(DatabaseContract.Trees.SQL_DELETE_TREES_TABLE);
         db.execSQL(DatabaseContract.Branches.SQL_DELETE_BRANCHES_TABLE);
         db.execSQL(DatabaseContract.Frames.SQL_DELETE_FRAMES_TABLE);
+        db.execSQL(DatabaseContract.Coordinates.SQL_DELETE_COORDINATES_TABLE);
         onCreate(db);
     }
 }

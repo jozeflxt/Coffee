@@ -7,15 +7,16 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.lexot.cenicafe.ListActivity;
+import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeInfoDialog;
+import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
+import com.lexot.cenicafe.BatchActivity;
+import com.lexot.cenicafe.BatchMapActivity;
 import com.lexot.cenicafe.Models.CoffeeBatch;
-import com.lexot.cenicafe.Models.CoffeeBranch;
 import com.lexot.cenicafe.R;
+import com.lexot.cenicafe.TrackGPSActivity;
 import com.lexot.cenicafe.TreeActivity;
 import com.rilixtech.materialfancybutton.MaterialFancyButton;
 import com.thekhaeng.pushdownanim.PushDownAnim;
-
-import java.util.List;
 
 public class ViewBatch  extends LinearLayout implements View.OnClickListener {
 
@@ -28,6 +29,7 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
     TextView txtTrees;
     View moreDetailsView;
     Integer idBatch;
+    Integer synced;
     public ViewBatch(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -46,11 +48,15 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
         MaterialFancyButton btnAddBatch = findViewById(R.id.btnDetail);
         btnAddBatch.setOnClickListener(this);
         PushDownAnim.setPushDownAnimTo(btnAddBatch);
+        MaterialFancyButton btnMap = findViewById(R.id.btnMap);
+        btnMap.setOnClickListener(this);
+        PushDownAnim.setPushDownAnimTo(btnMap);
     }
 
     public void bind(CoffeeBatch item)
     {
         idBatch = item.Id;
+        synced = item.Synced;
         txtName.setText(item.Name);
         txtAge.setText(item.Age.toString());
         txtBranches.setText(item.BranchesAmmount.toString());
@@ -68,11 +74,55 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
                     moreDetailsView.setVisibility(GONE);
                 }
                 break;
-            default:
-                Intent intent = new Intent(getContext(), TreeActivity.class);
-                intent.putExtra(TreeActivity.BATCH_ID_PARAM, idBatch);
-                getContext().startActivity(intent);
+            case R.id.btnMap:
+                Intent intentMap = new Intent(getContext(), BatchMapActivity.class);
+                intentMap.putExtra(BatchMapActivity.BATCH_ID_PARAM, idBatch);
+                intentMap.putExtra(BatchMapActivity.CREATING_PARAM, false);
+                getContext().startActivity(intentMap);
                 break;
+            default:
+                if (synced == 0) {
+                    new AwesomeInfoDialog(getContext())
+                            .setTitle("Geolocalización")
+                            .setMessage("¿Cómo deseas tomar la información?")
+                            .setColoredCircle(R.color.dialogSuccessBackgroundColor)
+                            .setDialogIconAndColor(R.drawable.ic_dialog_info, R.color.white)
+                            .setCancelable(true)
+                            .setPositiveButtonText("Dibujar en mapa")
+                            .setPositiveButtonbackgroundColor(R.color.dialogSuccessBackgroundColor)
+                            .setPositiveButtonTextColor(R.color.white)
+                            .setNegativeButtonText("Usar GPS")
+                            .setNegativeButtonbackgroundColor(R.color.dialogSuccessBackgroundColor)
+                            .setNegativeButtonTextColor(R.color.white)
+                            .setPositiveButtonClick(new Closure() {
+                                @Override
+                                public void exec() {
+                                    startDraw();
+                                }
+                            })
+                            .setNegativeButtonClick(new Closure() {
+                                @Override
+                                public void exec() {
+                                    startGPS();
+                                }
+                            })
+                            .show();
+                    break;
+                } else {
+                    Intent intent = new Intent(getContext(), TreeActivity.class);
+                    getContext().startActivity(intent);
+                }
         }
+    }
+
+    public void startGPS() {
+        Intent intent = new Intent(getContext(), TrackGPSActivity.class);
+        getContext().startActivity(intent);
+    }
+    public void startDraw() {
+        Intent intent = new Intent(getContext(), BatchMapActivity.class);
+        intent.putExtra(BatchMapActivity.BATCH_ID_PARAM, idBatch);
+        intent.putExtra(BatchMapActivity.CREATING_PARAM, true);
+        ((BatchActivity)getContext()).startActivityForResult(intent, 0);
     }
 }
