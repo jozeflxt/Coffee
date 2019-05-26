@@ -186,10 +186,7 @@ public class SyncService extends IntentService {
     }
 
     public void syncBranch(final CoffeeBranch coffeeBranch) {
-        String dataSensores = coffeeBranch.Data;
-        String message = coffeeBranch.Info;
-        RequestBody file = RequestBody.create(MediaType.parse("multipart/form-data"), (dataSensores + "\n\n" + message).getBytes(StandardCharsets.UTF_8));
-        Call<DefaultResponse> call = repo.PostCoffeeBranch(coffeeBranch,file, coffeeBranch.TreeBackendId);
+        Call<DefaultResponse> call = repo.PostCoffeeBranch(coffeeBranch,coffeeBranch.TreeBackendId);
         call.enqueue(new Callback<DefaultResponse>() {
             @Override
             public void onResponse(Response<DefaultResponse> response, Retrofit retrofit) {

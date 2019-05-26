@@ -45,13 +45,9 @@ public class DatabaseContract {
 
         public static final String TABLE_NAME = "branch";
         public static final String COLUMN_NAME_BRANCH_DATE = "date";
-        public static final String COLUMN_NAME_BRANCH_TYPE = "type";
-        public static final String COLUMN_NAME_BRANCH_INFO = "info";
-        public static final String COLUMN_NAME_BRANCH_DATA = "data";
         public static final String COLUMN_NAME_BRANCH_TREEID = "treeid";
         public static final String COLUMN_NAME_BRANCH_INDEX = "indexBranch";
         public static final String COLUMN_NAME_BRANCH_STEMID = "stemid";
-        public static final String COLUMN_NAME_BRANCH_VIDEO = "video";
         public static final String COLUMN_NAME_BRANCH_REALID = "realid";
         public static final String COLUMN_NAME_SYNCED = "synced";
 
@@ -59,14 +55,10 @@ public class DatabaseContract {
                 "CREATE TABLE " + Branches.TABLE_NAME + " (" +
                         Branches._ID + " INTEGER PRIMARY KEY," +
                         Branches.COLUMN_NAME_BRANCH_DATE + TEXT_TYPE + COMMA_SEP +
-        Branches.COLUMN_NAME_BRANCH_TYPE + INTEGER_TYPE + COMMA_SEP+
                         Branches.COLUMN_NAME_BRANCH_TREEID + INTEGER_TYPE + COMMA_SEP+
                         Branches.COLUMN_NAME_BRANCH_INDEX + INTEGER_TYPE + COMMA_SEP+
                         Branches.COLUMN_NAME_BRANCH_STEMID + INTEGER_TYPE + COMMA_SEP+
-                        Branches.COLUMN_NAME_BRANCH_VIDEO + TEXT_TYPE + COMMA_SEP+
-                        Branches.COLUMN_NAME_BRANCH_DATA + TEXT_TYPE + COMMA_SEP+
                         Branches.COLUMN_NAME_SYNCED + INTEGER_TYPE + COMMA_SEP+
-                        Branches.COLUMN_NAME_BRANCH_INFO + TEXT_TYPE + COMMA_SEP+
         Branches.COLUMN_NAME_BRANCH_REALID + INTEGER_TYPE +
                 " )";
 
@@ -77,8 +69,6 @@ public class DatabaseContract {
         // BaseColumns nos entrega las constantes \_ID y \_COUNT
 
         public static final String TABLE_NAME = "tree";
-        public static final String COLUMN_NAME_TREE_LAT = "lat";
-        public static final String COLUMN_NAME_TREE_LNG = "lng";
         public static final String COLUMN_NAME_TREE_REALID = "realid";
         public static final String COLUMN_NAME_TREE_BATCHID = "batchid";
         public static final String COLUMN_NAME_TREE_INDEX = "indexTree";
@@ -87,8 +77,6 @@ public class DatabaseContract {
         public static final String SQL_CREATE_TREES_TABLE =
                 "CREATE TABLE " + Trees.TABLE_NAME + " (" +
                         Trees._ID + " INTEGER PRIMARY KEY," +
-                        Trees.COLUMN_NAME_TREE_LAT + REAL_TYPE + COMMA_SEP +
-                        Trees.COLUMN_NAME_TREE_LNG + REAL_TYPE + COMMA_SEP+
                         Trees.COLUMN_NAME_TREE_BATCHID + INTEGER_TYPE + COMMA_SEP+
                         Trees.COLUMN_NAME_TREE_INDEX + INTEGER_TYPE + COMMA_SEP+
                         Trees.COLUMN_NAME_SYNCED + INTEGER_TYPE + COMMA_SEP+
@@ -97,6 +85,27 @@ public class DatabaseContract {
 
         public static final String SQL_DELETE_TREES_TABLE =
                 "DROP TABLE IF EXISTS " + Trees.TABLE_NAME;
+    }
+    public static abstract class Coordinates implements BaseColumns {
+        // BaseColumns nos entrega las constantes \_ID y \_COUNT
+
+        public static final String TABLE_NAME = "coordinate";
+        public static final String COLUMN_NAME_COORDINATE_LAT = "lat";
+        public static final String COLUMN_NAME_COORDINATE_LNG = "lng";
+        public static final String COLUMN_NAME_COORDINATE_INDEX = "indexCoordinate";
+        public static final String COLUMN_NAME_COORDINATE_BATCHID = "batchId";
+
+        public static final String SQL_CREATE_COORDINATES_TABLE =
+                "CREATE TABLE " + Coordinates.TABLE_NAME + " (" +
+                        Coordinates._ID + " INTEGER PRIMARY KEY," +
+                        Coordinates.COLUMN_NAME_COORDINATE_LAT + REAL_TYPE + COMMA_SEP +
+                        Coordinates.COLUMN_NAME_COORDINATE_LNG + REAL_TYPE + COMMA_SEP+
+                        Coordinates.COLUMN_NAME_COORDINATE_INDEX + INTEGER_TYPE + COMMA_SEP+
+                        Coordinates.COLUMN_NAME_COORDINATE_BATCHID + INTEGER_TYPE +
+                        " )";
+
+        public static final String SQL_DELETE_COORDINATES_TABLE =
+                "DROP TABLE IF EXISTS " + Coordinates.TABLE_NAME;
     }
     public static abstract class Frames implements BaseColumns {
         // BaseColumns nos entrega las constantes \_ID y \_COUNT

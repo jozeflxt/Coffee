@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeInfoDialog;
+import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.lexot.cenicafe.Adapters.BatchAdapter;
 import com.lexot.cenicafe.Models.BLL;
 import com.lexot.cenicafe.Models.CoffeeBatch;

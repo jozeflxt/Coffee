@@ -3,46 +3,65 @@ package com.lexot.cenicafe;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.location.Location;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.lexot.cenicafe.Models.BLL;
+import com.lexot.cenicafe.Models.CoffeeLatLng;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BatchMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private Marker marker;
 
-    public static String MAP_LAT_RESULT = "mapLatResult";
-    public static String MAP_LNG_RESULT = "mapLngResult";
-    private LatLng latLng;
+    public static String CREATING_PARAM = "creatingParam";
+    public static String BATCH_ID_PARAM = "batchIdParam";
+    private PolygonOptions rectOptions;
+    private Polygon polygon;
+    private List<LatLng> coordinates = new ArrayList<>();
+    private boolean isCreating;
+    private BLL bll;
+    private int batchId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_batch_map);
+        isCreating = getIntent().getBooleanExtra(CREATING_PARAM,true);
+        batchId = getIntent().getIntExtra(BATCH_ID_PARAM,0);
+        bll = new BLL(this);
         FloatingActionButton fab = findViewById(R.id.fab);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(MAP_LAT_RESULT, latLng.latitude);
-                resultIntent.putExtra(MAP_LNG_RESULT, latLng.longitude);
-                setResult(RESULT_OK, resultIntent);
+                if (isCreating) {
+                    bll.createCoordinates(coordinates, batchId);
+                }
+                setResult(RESULT_OK);
                 finish();
             }
         });
@@ -60,35 +79,71 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        rectOptions = new PolygonOptions();
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mMap.setMyLocationEnabled(true);
-        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+        if (isCreating) {
+            mMap.setMyLocationEnabled(true);
+            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
 
-            @Override
-            public void onMyLocationChange(Location location) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 20));
-                if (marker == null) {
-                    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())));
-                } else {
-                    marker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+                @Override
+                public void onMyLocationChange(Location location) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 20));
+                    mMap.setOnMyLocationChangeListener(null);
                 }
-                latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.setOnMyLocationChangeListener(null);
-            }
-        });
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng point) {
-                if (marker == null) {
-                    marker = mMap.addMarker(new MarkerOptions().position(point));
-                } else {
-                    marker.setPosition(point);
+            });
+        }
+        if (isCreating) {
+            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                @Override
+                public void onMapLongClick(LatLng latLng) {
+                    mMap.addMarker(new MarkerOptions().position(latLng).draggable(true));
+                    coordinates.add(latLng);
+                    if (polygon == null) {
+                        rectOptions.add(latLng);
+                        polygon = mMap.addPolygon(rectOptions);
+                    }
+                    drawRegion();
                 }
-                latLng = point;
+            });
+            mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                @Override
+                public void onMarkerDragStart(Marker marker) {
+                    drawRegion();
+                }
+
+                @Override
+                public void onMarkerDrag(Marker marker) {
+                    drawRegion();
+                }
+
+                @Override
+                public void onMarkerDragEnd(Marker marker) {
+                    drawRegion();
+                }
+            });
+        } else {
+            ArrayList<CoffeeLatLng> coffeeLatLngs = bll.getCoordinates(batchId);
+            for (int j=0; j<=coffeeLatLngs.size() - 1; j++) {
+                coordinates.add(new LatLng(coffeeLatLngs.get(j).Lat, coffeeLatLngs.get(j).Lng));
             }
-        });
+            if (coordinates.size() > 0) {
+                if (polygon == null) {
+                    rectOptions.add(coordinates.get(0));
+                    polygon = mMap.addPolygon(rectOptions);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates.get(0), 20));
+                    mMap.setOnMyLocationChangeListener(null);
+                }
+                drawRegion();
+            }
+        }
     }
+
+    public void drawRegion() {
+        polygon.setPoints(coordinates);
+    }
+
 }

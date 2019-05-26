@@ -13,8 +13,7 @@ public class CoffeeBatch implements Serializable, Searchable {
     public Integer BranchesAmmount;
     public String Name;
     public Integer Stems;
-    public Boolean Synced;
-    public List<CoffeeBranch> CoffeeBranches;
+    public Integer Synced;
 
     @Override
     public String getTitle() {

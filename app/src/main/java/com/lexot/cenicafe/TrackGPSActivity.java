@@ -1,47 +1,66 @@
 package com.lexot.cenicafe;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.View;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TrackGPSActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private Marker marker;
 
     public static String MAP_LAT_RESULT = "mapLatResult";
     public static String MAP_LNG_RESULT = "mapLngResult";
-    private LatLng latLng;
+    private PolygonOptions rectOptions;
+    private Polygon polygon;
+    private List<Marker> markers = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_batch_map);
         FloatingActionButton fab = findViewById(R.id.fab);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra(MAP_LAT_RESULT, latLng.latitude);
-                resultIntent.putExtra(MAP_LNG_RESULT, latLng.longitude);
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }
@@ -60,6 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        rectOptions = new PolygonOptions();
         mMap = googleMap;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -70,25 +90,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onMyLocationChange(Location location) {
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 20));
-                if (marker == null) {
-                    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())));
-                } else {
-                    marker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+                Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).draggable(true));
+                markers.add(marker);
+                if (polygon == null) {
+                    rectOptions.add(new LatLng(location.getLatitude(), location.getLongitude()));
+                    polygon = mMap.addPolygon(rectOptions);
                 }
-                latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.setOnMyLocationChangeListener(null);
+                drawRegion();
             }
         });
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng point) {
-                if (marker == null) {
-                    marker = mMap.addMarker(new MarkerOptions().position(point));
-                } else {
-                    marker.setPosition(point);
-                }
-                latLng = point;
-            }
-        });
+    }
+
+    public void drawRegion() {
+        List<LatLng> points = new ArrayList<>();
+        for (Marker m: markers) {
+            points.add(m.getPosition());
+        }
+        polygon.setPoints(points);
     }
 }

@@ -33,7 +33,7 @@
         android:layout_marginBottom="20dp" />
 
     <com.rilixtech.materialfancybutton.MaterialFancyButton
-        android:id="@+id/btnDelete"
+        android:id="@+id/btnMap"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginRight="10dp"
@@ -41,7 +41,7 @@
         app:mfb_focusColor="@android:color/white"
         app:mfb_radius="25dp"
         app:mfb_text=""
-        app:mfb_icon="@string/fawi_trash"
+        app:mfb_icon="@string/fawi_map"
         app:mfb_fontIconSize="18dp"
         android:layout_toLeftOf="@id/btnDetail"
         android:layout_marginTop="15dp"

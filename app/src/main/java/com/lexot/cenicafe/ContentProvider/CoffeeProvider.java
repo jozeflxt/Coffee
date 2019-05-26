@@ -23,6 +23,7 @@ public class CoffeeProvider extends ContentProvider {
     public static final int BATCH_ID = 6;
     public static final int TREE_LIST = 7;
     public static final int TREE_ID = 8;
+    public static final int COORDINATE_LIST = 9;
     private static final UriMatcher sUriMatcher;
     static{
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -34,6 +35,7 @@ public class CoffeeProvider extends ContentProvider {
         sUriMatcher.addURI(BatchContract.AUTHORITY, "batch/#", BATCH_ID);
         sUriMatcher.addURI(BatchContract.AUTHORITY, "tree", TREE_LIST);
         sUriMatcher.addURI(BatchContract.AUTHORITY, "tree/#", TREE_ID);
+        sUriMatcher.addURI(BatchContract.AUTHORITY, "coordinate", COORDINATE_LIST);
     }
     /*
         Instancia de StudentsDbHelper para interactuar con la base de datos
@@ -76,6 +78,10 @@ public class CoffeeProvider extends ContentProvider {
                 break;
             case TREE_ID:
                 rows = db.delete(DatabaseContract.Trees.TABLE_NAME, selection, selectionArgs);
+                break;
+            case COORDINATE_LIST:
+                rows = db.delete(DatabaseContract.Coordinates.TABLE_NAME, null, null);
+                break;
         }
         // Se retorna el numero de filas eliminadas
         return rows;
@@ -103,6 +109,8 @@ public class CoffeeProvider extends ContentProvider {
                 return TreeContract.URI_TYPE_COFFEE_DIR;
             case TREE_ID:
                 return TreeContract.URI_TYPE_COFFEE_ITEM;
+            case COORDINATE_LIST:
+                return CoordinateContract.URI_TYPE_COFFEE_DIR;
             default:
                 return null;
         }
@@ -127,8 +135,11 @@ public class CoffeeProvider extends ContentProvider {
                 break;
             case TREE_LIST:
             case TREE_ID:
-            default:
                 id = db.insert(DatabaseContract.Trees.TABLE_NAME, null, values);
+                break;
+            case COORDINATE_LIST:
+            default:
+                id = db.insert(DatabaseContract.Coordinates.TABLE_NAME, null, values);
                 break;
         }
         // Le avisa a los observadores
@@ -216,6 +227,13 @@ public class CoffeeProvider extends ContentProvider {
                 selection = selection + "_ID = " + uri.getLastPathSegment();
                 tableName = DatabaseContract.Trees.TABLE_NAME;
                 break;
+            case COORDINATE_LIST:
+                // Si no hay un orden especificado,
+                // lo ordenamos de manera ascendente de acuerdo a lo que diga el contrato
+                if (sortOrder == null || TextUtils.isEmpty(sortOrder))
+                    sortOrder = CoordinateContract.CoordinateColumns.DEFAULT_SORT_ORDER;
+                tableName = DatabaseContract.Coordinates.TABLE_NAME;
+                break;
             // La URI que se recibe no esta definida
             default:
                 throw new IllegalArgumentException(
@@ -265,8 +283,12 @@ public class CoffeeProvider extends ContentProvider {
                 tableName = DatabaseContract.Frames.TABLE_NAME;
                 break;
             case FRAME_ID:
-            default:
                 tableName = DatabaseContract.Frames.TABLE_NAME;
+                selection = selection + "_ID = " + uri.getLastPathSegment();
+                break;
+            case COORDINATE_LIST:
+            default:
+                tableName = DatabaseContract.Coordinates.TABLE_NAME;
                 selection = selection + "_ID = " + uri.getLastPathSegment();
                 break;
         }

@@ -35,11 +35,11 @@ public interface IRestClient {
 
     @Multipart
     @POST("postTree")
-    Call<DefaultResponse> postCoffeeTree(@Part("BatchID") RequestBody batchID,@Part("Index") RequestBody index,@Part("Lat") RequestBody lat,@Part("Lng") RequestBody lng);
+    Call<DefaultResponse> postCoffeeTree(@Part("BatchID") RequestBody batchID,@Part("Index") RequestBody index);
 
     @Multipart
     @POST("postBranch")
-    Call<DefaultResponse> postCoffeeBranch(@Part("TreeID") RequestBody treeID,@Part("Type") RequestBody type,@Part("Index") RequestBody index,@Part("Date") RequestBody date,@Part("StemID") RequestBody stemID, @Part("file\"; filename=\"file.txt") RequestBody file);
+    Call<DefaultResponse> postCoffeeBranch(@Part("TreeID") RequestBody treeID,@Part("Index") RequestBody index,@Part("Date") RequestBody date,@Part("StemID") RequestBody stemID);
 
     @Multipart
     @POST("postFrame")

@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import com.lexot.cenicafe.BatchActivity;
 import com.lexot.cenicafe.ListActivity;
-import com.lexot.cenicafe.MapListActivity;
-import com.lexot.cenicafe.MapsActivity;
 import com.lexot.cenicafe.Models.BLL;
 import com.lexot.cenicafe.OptionsActivity;
 import com.lexot.cenicafe.R;
@@ -22,12 +20,10 @@ import java.util.ArrayList;
 public class ButtonHome extends RelativeLayout implements View.OnClickListener {
     Integer id;
     Context context;
-    private BLL bll;
 
     public ButtonHome(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        this.bll = new BLL(context);
         this.setOnClickListener(this);
         inflate(context, R.layout.view_button_home,this);
         TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -55,11 +51,9 @@ public class ButtonHome extends RelativeLayout implements View.OnClickListener {
                 context.startActivity(in1);
                 return;
             case 2:
-                requestName(false);
                 return;
             case 3:
-                Intent in3 = new Intent(context,MapListActivity.class);
-                context.startActivity(in3);
+
                 return;
             case 4:
                 return;
@@ -74,14 +68,5 @@ public class ButtonHome extends RelativeLayout implements View.OnClickListener {
         }
     }
 
-    public void requestName(final Boolean isVideo)
-    {
-        ArrayList listBatches = bll.getBatches(false);
-
-
-
-
-
-    }
 
 }

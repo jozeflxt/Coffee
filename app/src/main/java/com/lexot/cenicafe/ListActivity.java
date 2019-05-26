@@ -50,7 +50,6 @@ public class ListActivity extends AppCompatActivity implements BranchListener {
     @Override
     public void captureFrames(Integer type, Integer branchId) {
         Intent i = new Intent(this,MainActivity.class);
-        bll.updateBranch(branchId, type);
         Bundle b = new Bundle();
         b.putInt(MainActivity.BRANCH_ID_PARAM, branchId);
         i.putExtras(b);

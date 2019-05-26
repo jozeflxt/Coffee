@@ -30,7 +30,6 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
@@ -68,13 +67,11 @@
             android:name=".Services.SyncService"
             android:exported="false" />
         <service
-            android:name=".Services.VideoSplitService"
-            android:exported="false" />
-        <service
             android:name=".Services.FactorService"
             android:exported="false" />
 
         <activity android:name=".FrameListActivity" />
+        <activity android:name=".BatchMapActivity" />
         <activity android:name=".ImageFullActivity" />
         <activity android:name=".BatchActivity" />
         <activity android:name=".NewBatchActivity" />
@@ -88,11 +85,10 @@
 
         <activity android:name=".TreeActivity" />
         <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity
-            android:name=".MapListActivity"
-            android:label="@string/title_activity_map_list"></activity>
+            android:name=".TrackGPSActivity"
+            android:label="@string/title_activity_track_gps"
+            android:theme="@style/AppTheme"></activity>
+        <uses-library android:required="true" android:name="com.google.android.maps" />
     </application>
 
 </manifest>

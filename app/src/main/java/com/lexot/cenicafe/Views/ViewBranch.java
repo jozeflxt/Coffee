@@ -32,10 +32,6 @@ public class ViewBranch  extends LinearLayout implements View.OnClickListener {
     TextView txtFrames;
     View syncContainer;
     private Integer Id;
-    private String Info;
-    private String Data;
-    MaterialFancyButton btnInfo;
-    MaterialFancyButton btnData;
     MaterialFancyButton btnRegisterPhoto;
     MaterialFancyButton btnRegisterVideo;
 
@@ -51,15 +47,8 @@ public class ViewBranch  extends LinearLayout implements View.OnClickListener {
         this.txtBranch = findViewById(R.id.txtBranch);
         this.txtFrames = findViewById(R.id.txtFrames);
         this.syncContainer = findViewById(R.id.syncContainer);
-        this.txtType = findViewById(R.id.txtType);
         this.txtProgress = findViewById(R.id.txtProgress);
         this.setOnClickListener(this);
-        btnData = findViewById(R.id.btnData);
-        btnData.setOnClickListener(this);
-        PushDownAnim.setPushDownAnimTo(btnData);
-        btnInfo = findViewById(R.id.btnInfo);
-        btnInfo.setOnClickListener(this);
-        PushDownAnim.setPushDownAnimTo(btnInfo);
         btnRegisterPhoto = findViewById(R.id.btnRegisterPhoto);
         btnRegisterPhoto.setOnClickListener(this);
         PushDownAnim.setPushDownAnimTo(btnRegisterPhoto);
@@ -90,21 +79,15 @@ public class ViewBranch  extends LinearLayout implements View.OnClickListener {
     };
     public void bind(CoffeeBranch item)
     {
-        Data = item.Data;
-        Info = item.Info;
         Id = item.Id;
         txtBranch.setText("Rama " + item.Index);
 
-        if(item.Type == 2)
-            txtType.setText("Fotos.");
-        if(item.Type == 1)
-            txtType.setText("Video.");
-        if(item.Type != 0) {
+        if(item.Synced != 0) {
             syncContainer.setVisibility(VISIBLE);
             btnRegisterPhoto.setVisibility(GONE);
             btnRegisterVideo.setVisibility(GONE);
             txtFrames.setText(item.FramesCount.toString() + " Frames");
-            if(item.Synced) {
+            if(item.Synced == 2) {
                 txtProgress.setText("Sincronizado");
                 txtProgress.setTextColor(getResources().getColor(R.color.colorPrimary));
             }
@@ -112,10 +95,6 @@ public class ViewBranch  extends LinearLayout implements View.OnClickListener {
                 txtProgress.setText("Sincronizando ...");
                 txtProgress.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             }
-        }
-        else {
-            btnInfo.setVisibility(GONE);
-            btnData.setVisibility(GONE);
         }
     }
 
@@ -128,32 +107,10 @@ public class ViewBranch  extends LinearLayout implements View.OnClickListener {
         context.startActivity(i);
         return;
     }
-    void clickData()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Datos");
-        builder.setMessage(Data);
-        builder.setPositiveButton("OK", null);
-        builder.show();
-    }
-    void clickInfo()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Información");
-        builder.setMessage(Info);
-        builder.setPositiveButton("OK", null);
-        builder.show();
-    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnInfo:
-                clickInfo();
-                break;
-            case R.id.btnData:
-                clickData();
-                break;
             case R.id.btnRegisterVideo:
                 listener.captureFrames(1, Id);
                 break;

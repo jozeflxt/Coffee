@@ -16,35 +16,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <com.rilixtech.materialfancybutton.MaterialFancyButton
-                android:id="@+id/btnInfo"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginRight="10dp"
-                app:mfb_defaultColor="@color/darkBlue"
-                app:mfb_focusColor="@android:color/white"
-                app:mfb_radius="25dp"
-                app:mfb_text=""
-                app:mfb_icon="@string/fawi_info"
-                app:mfb_fontIconSize="14dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="20dp" />
 
-            <com.rilixtech.materialfancybutton.MaterialFancyButton
-                android:id="@+id/btnData"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginRight="10dp"
-                app:mfb_defaultColor="@color/colorPrimaryDark"
-                app:mfb_focusColor="@android:color/white"
-                app:mfb_radius="25dp"
-                app:mfb_text=""
-                app:mfb_icon="@string/fawi_database"
-                app:mfb_fontIconSize="14dp"
-                android:layout_toLeftOf="@id/btnInfo"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="20dp" />
 
             <com.rilixtech.materialfancybutton.MaterialFancyButton
                 android:id="@+id/btnRegisterPhoto"
@@ -107,13 +79,6 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <TextView
-                        android:text=""
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:id="@+id/txtType"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
                     <TextView
                         android:layout_marginLeft="10dp"
                         android:text=""
