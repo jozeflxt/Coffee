@@ -75,14 +75,11 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
                 }
                 break;
             case R.id.btnMap:
-                Intent intentMap = new Intent(getContext(), BatchMapActivity.class);
-                intentMap.putExtra(BatchMapActivity.BATCH_ID_PARAM, idBatch);
-                intentMap.putExtra(BatchMapActivity.CREATING_PARAM, false);
-                getContext().startActivity(intentMap);
+                startDraw(synced == 0);
                 break;
             default:
                 if (synced == 0) {
-                    new AwesomeInfoDialog(getContext())
+                   /* new AwesomeInfoDialog(getContext())
                             .setTitle("Geolocalización")
                             .setMessage("¿Cómo deseas tomar la información?")
                             .setColoredCircle(R.color.dialogSuccessBackgroundColor)
@@ -106,23 +103,26 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
                                     startGPS();
                                 }
                             })
-                            .show();
-                    break;
+                            .show();*/
+                   startDraw(true);
+                   break;
                 } else {
                     Intent intent = new Intent(getContext(), TreeActivity.class);
+                    intent.putExtra(TreeActivity.BATCH_ID_PARAM, idBatch);
                     getContext().startActivity(intent);
                 }
         }
     }
 
+
     public void startGPS() {
         Intent intent = new Intent(getContext(), TrackGPSActivity.class);
         getContext().startActivity(intent);
     }
-    public void startDraw() {
+    public void startDraw(Boolean isCreating) {
         Intent intent = new Intent(getContext(), BatchMapActivity.class);
         intent.putExtra(BatchMapActivity.BATCH_ID_PARAM, idBatch);
-        intent.putExtra(BatchMapActivity.CREATING_PARAM, true);
+        intent.putExtra(BatchMapActivity.CREATING_PARAM, isCreating);
         ((BatchActivity)getContext()).startActivityForResult(intent, 0);
     }
 }

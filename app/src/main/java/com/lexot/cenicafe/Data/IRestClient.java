@@ -35,7 +35,7 @@ public interface IRestClient {
 
     @Multipart
     @POST("postTree")
-    Call<DefaultResponse> postCoffeeTree(@Part("BatchID") RequestBody batchID,@Part("Index") RequestBody index,@Part("Lat") RequestBody lat,@Part("Lng") RequestBody lng);
+    Call<DefaultResponse> postCoffeeTree(@Part("BatchID") RequestBody batchID,@Part("Index") RequestBody index);
 
     @Multipart
     @POST("postBranch")

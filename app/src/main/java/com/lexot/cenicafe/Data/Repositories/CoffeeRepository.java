@@ -40,9 +40,7 @@ public class CoffeeRepository {
     public Call<DefaultResponse> PostCoffeeTree(CoffeeTree coffeeTree, Integer parentBackedId) {
         return apiService.postCoffeeTree(
                 RequestBody.create(MediaType.parse("multipart/form-data"),parentBackedId.toString()),
-                RequestBody.create(MediaType.parse("multipart/form-data"),coffeeTree.Index.toString()),
-                RequestBody.create(MediaType.parse("multipart/form-data"),coffeeTree.Lat.toString()),
-                RequestBody.create(MediaType.parse("multipart/form-data"),coffeeTree.Lng.toString()));
+                RequestBody.create(MediaType.parse("multipart/form-data"),coffeeTree.Index.toString()));
     }
 
     public Call<DefaultResponse> PostCoffeeBranch(CoffeeBranch coffeeBranch, Integer parentBackedId) {

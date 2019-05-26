@@ -88,12 +88,6 @@
 
         <activity android:name=".TreeActivity" />
         <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity
-            android:name=".MapListActivity"
-            android:label="@string/title_activity_map_list" />
-        <activity
             android:name=".TrackGPSActivity"
             android:label="@string/title_activity_track_gps"
             android:theme="@style/AppTheme"></activity>

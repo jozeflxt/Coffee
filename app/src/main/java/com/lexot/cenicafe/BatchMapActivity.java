@@ -59,7 +59,6 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onClick(View view) {
                 if (isCreating) {
-                    coordinates.add(new LatLng(2.0,2.0));
                     bll.createCoordinates(coordinates, batchId);
                 }
                 setResult(RESULT_OK);
@@ -82,18 +81,21 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap) {
         rectOptions = new PolygonOptions();
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mMap.setMyLocationEnabled(true);
-        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+        if (isCreating) {
+            mMap.setMyLocationEnabled(true);
+            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
 
-            @Override
-            public void onMyLocationChange(Location location) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 20));
-                mMap.setOnMyLocationChangeListener(null);
-            }
-        });
+                @Override
+                public void onMyLocationChange(Location location) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 20));
+                    mMap.setOnMyLocationChangeListener(null);
+                }
+            });
+        }
         if (isCreating) {
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
@@ -128,7 +130,15 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
             for (int j=0; j<=coffeeLatLngs.size() - 1; j++) {
                 coordinates.add(new LatLng(coffeeLatLngs.get(j).Lat, coffeeLatLngs.get(j).Lng));
             }
-            drawRegion();
+            if (coordinates.size() > 0) {
+                if (polygon == null) {
+                    rectOptions.add(coordinates.get(0));
+                    polygon = mMap.addPolygon(rectOptions);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates.get(0), 20));
+                    mMap.setOnMyLocationChangeListener(null);
+                }
+                drawRegion();
+            }
         }
     }
 

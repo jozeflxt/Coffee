@@ -73,8 +73,6 @@ public class DatabaseContract {
         // BaseColumns nos entrega las constantes \_ID y \_COUNT
 
         public static final String TABLE_NAME = "tree";
-        public static final String COLUMN_NAME_TREE_LAT = "lat";
-        public static final String COLUMN_NAME_TREE_LNG = "lng";
         public static final String COLUMN_NAME_TREE_REALID = "realid";
         public static final String COLUMN_NAME_TREE_BATCHID = "batchid";
         public static final String COLUMN_NAME_TREE_INDEX = "indexTree";
@@ -83,8 +81,6 @@ public class DatabaseContract {
         public static final String SQL_CREATE_TREES_TABLE =
                 "CREATE TABLE " + Trees.TABLE_NAME + " (" +
                         Trees._ID + " INTEGER PRIMARY KEY," +
-                        Trees.COLUMN_NAME_TREE_LAT + REAL_TYPE + COMMA_SEP +
-                        Trees.COLUMN_NAME_TREE_LNG + REAL_TYPE + COMMA_SEP+
                         Trees.COLUMN_NAME_TREE_BATCHID + INTEGER_TYPE + COMMA_SEP+
                         Trees.COLUMN_NAME_TREE_INDEX + INTEGER_TYPE + COMMA_SEP+
                         Trees.COLUMN_NAME_SYNCED + INTEGER_TYPE + COMMA_SEP+

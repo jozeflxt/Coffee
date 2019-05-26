@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import com.lexot.cenicafe.BatchActivity;
 import com.lexot.cenicafe.ListActivity;
-import com.lexot.cenicafe.MapListActivity;
-import com.lexot.cenicafe.MapsActivity;
 import com.lexot.cenicafe.Models.BLL;
 import com.lexot.cenicafe.OptionsActivity;
 import com.lexot.cenicafe.R;
@@ -58,8 +56,7 @@ public class ButtonHome extends RelativeLayout implements View.OnClickListener {
                 requestName(false);
                 return;
             case 3:
-                Intent in3 = new Intent(context,MapListActivity.class);
-                context.startActivity(in3);
+
                 return;
             case 4:
                 return;

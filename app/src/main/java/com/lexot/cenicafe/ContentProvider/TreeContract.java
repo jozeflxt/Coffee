@@ -23,8 +23,6 @@ public class TreeContract {
         private TreeColumns(){}
 
         public static final String BATCH_ID = DatabaseContract.Trees.COLUMN_NAME_TREE_BATCHID;
-        public static final String LAT = DatabaseContract.Trees.COLUMN_NAME_TREE_LAT;
-        public static final String LNG = DatabaseContract.Trees.COLUMN_NAME_TREE_LNG;
         public static final String INDEX = DatabaseContract.Trees.COLUMN_NAME_TREE_INDEX;
         public static final String REAL_ID = DatabaseContract.Trees.COLUMN_NAME_TREE_REALID;
         public static final String SYNCED = DatabaseContract.Trees.COLUMN_NAME_SYNCED;
