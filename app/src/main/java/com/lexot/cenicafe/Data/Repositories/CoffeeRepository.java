@@ -48,7 +48,6 @@ public class CoffeeRepository {
                 RequestBody.create(MediaType.parse("multipart/form-data"),new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         return apiService.postCoffeeBranch(
                 RequestBody.create(MediaType.parse("multipart/form-data"),parentBackedId.toString()),
-                RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBranch.Type.toString()),
                 RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBranch.Index.toString()),
                 date,
                 RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBranch.StemId.toString()));

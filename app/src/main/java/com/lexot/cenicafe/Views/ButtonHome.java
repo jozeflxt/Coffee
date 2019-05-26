@@ -20,12 +20,10 @@ import java.util.ArrayList;
 public class ButtonHome extends RelativeLayout implements View.OnClickListener {
     Integer id;
     Context context;
-    private BLL bll;
 
     public ButtonHome(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        this.bll = new BLL(context);
         this.setOnClickListener(this);
         inflate(context, R.layout.view_button_home,this);
         TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -53,7 +51,6 @@ public class ButtonHome extends RelativeLayout implements View.OnClickListener {
                 context.startActivity(in1);
                 return;
             case 2:
-                requestName(false);
                 return;
             case 3:
 
@@ -71,14 +68,5 @@ public class ButtonHome extends RelativeLayout implements View.OnClickListener {
         }
     }
 
-    public void requestName(final Boolean isVideo)
-    {
-        ArrayList listBatches = bll.getBatches(false);
-
-
-
-
-
-    }
 
 }

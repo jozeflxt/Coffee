@@ -84,7 +84,7 @@ public class BLL {
         String query = "SELECT t.*, COUNT(b2."+DatabaseContract.Branches._ID+") as BranchesNoUsedCount " +
                 " FROM " + DatabaseContract.Trees.TABLE_NAME + " AS t " +
                 " LEFT JOIN " + DatabaseContract.Branches.TABLE_NAME + " AS b2 ON b2."+DatabaseContract.Branches.COLUMN_NAME_BRANCH_TREEID+"=t." + DatabaseContract.Trees._ID +
-                " AND b2." + DatabaseContract.Branches.COLUMN_NAME_BRANCH_TYPE + "=0" +
+                " AND b2." + DatabaseContract.Branches.COLUMN_NAME_SYNCED + "=0" +
                 whereClause +
                 " GROUP BY t." + DatabaseContract.Trees._ID +
                 " ORDER BY t." + DatabaseContract.Trees._ID + " ASC";
@@ -147,11 +147,10 @@ public class BLL {
             CoffeeBranch coffeeBranch = new CoffeeBranch();
             coffeeBranch.Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
             coffeeBranch.Index = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.INDEX));
-            coffeeBranch.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.SYNCED)) == 2;
+            coffeeBranch.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.SYNCED));
             coffeeBranch.BackendId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.REAL_ID));
             coffeeBranch.TreeId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TREE_ID));
             coffeeBranch.StemId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.STEM_ID));
-            coffeeBranch.Type = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TYPE));
             coffeeBranch.Date = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.DATE));
             coffeeBranch.FramesCount = cursor.getInt(cursor.getColumnIndexOrThrow("FramesCount"));
             branches.add(coffeeBranch);
@@ -177,11 +176,10 @@ public class BLL {
             CoffeeBranch coffeeBranch = new CoffeeBranch();
             coffeeBranch.Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
             coffeeBranch.Index = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.INDEX));
-            coffeeBranch.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.SYNCED)) == 2;
+            coffeeBranch.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.SYNCED));
             coffeeBranch.BackendId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.REAL_ID));
             coffeeBranch.TreeId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TREE_ID));
             coffeeBranch.StemId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.STEM_ID));
-            coffeeBranch.Type = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TYPE));
             coffeeBranch.Date = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.DATE));
             coffeeBranch.FramesCount = cursor.getInt(cursor.getColumnIndexOrThrow("FramesCount"));
             branches.add(coffeeBranch);
@@ -207,11 +205,10 @@ public class BLL {
             CoffeeBranch coffeeBranch = new CoffeeBranch();
             coffeeBranch.Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
             coffeeBranch.Index = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.INDEX));
-            coffeeBranch.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.SYNCED)) == 2;
+            coffeeBranch.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.SYNCED));
             coffeeBranch.BackendId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.REAL_ID));
             coffeeBranch.TreeId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TREE_ID));
             coffeeBranch.StemId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.STEM_ID));
-            coffeeBranch.Type = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TYPE));
             coffeeBranch.Date = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.DATE));
             coffeeBranch.TreeBackendId = cursor.getInt(cursor.getColumnIndexOrThrow("TreeBackendId"));
             branches.add(coffeeBranch);
@@ -226,34 +223,15 @@ public class BLL {
         CoffeeBranch coffeeBranch = new CoffeeBranch();
         if (cursor.moveToFirst()) {
             coffeeBranch.Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
-            coffeeBranch.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.SYNCED)) == 2;
+            coffeeBranch.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.SYNCED));
             coffeeBranch.StemId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.STEM_ID));
             coffeeBranch.TreeId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TREE_ID));
-            coffeeBranch.Type = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.TYPE));
             coffeeBranch.BackendId = cursor.getInt(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.REAL_ID));
             coffeeBranch.Date = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.DATE));
-            coffeeBranch.VideoUrl = cursor.getString(cursor.getColumnIndexOrThrow(BranchContract.BranchColumns.VIDEO));
 
             //coffeeBranch.Path =
         }
         return coffeeBranch;
-    }
-
-    public int updateBranch(Integer branchId, String videoPath) {
-        ContentValues mNewValues = new ContentValues();
-        if(!videoPath.equals("")) {
-            mNewValues.put(BranchContract.BranchColumns.VIDEO,videoPath);
-        }
-        mNewValues.put(BranchContract.BranchColumns.SYNCED,1);
-        //Guardar en Base de datos
-        return mContentResolver.update(Uri.withAppendedPath(BranchContract.BRANCH_URI,branchId.toString()), mNewValues,null,null);
-    }
-
-    public int updateBranch(Integer branchId, Integer type) {
-        ContentValues mNewValues = new ContentValues();
-        mNewValues.put(BranchContract.BranchColumns.TYPE,type);
-        //Guardar en Base de datos
-        return mContentResolver.update(Uri.withAppendedPath(BranchContract.BRANCH_URI,branchId.toString()), mNewValues,null,null);
     }
 
     public ArrayList<CoffeeFrame> getFrames(Integer branchId) {
@@ -317,6 +295,11 @@ public class BLL {
         }
         return coffeeFrame;
     }
+    public void updateBranch(Integer brachId) {
+        ContentValues mNewValues = new ContentValues();
+        mNewValues.put(BranchContract.BranchColumns.SYNCED,1);
+        mContentResolver.update(Uri.withAppendedPath(BranchContract.BRANCH_URI,brachId.toString()), mNewValues,null,null);
+    }
 
     public void updateFrameFactor(Integer frameId, double factor) {
         ContentValues mNewValues = new ContentValues();
@@ -348,7 +331,6 @@ public class BLL {
                         mNewBatchValues.put(BranchContract.BranchColumns.TREE_ID, treeId);
                         mNewBatchValues.put(BranchContract.BranchColumns.INDEX, j);
                         mNewBatchValues.put(BranchContract.BranchColumns.DATE, (new SimpleDateFormat("ddMyyyy-HHmmss")).format(new Date()));
-                        mNewBatchValues.put(BranchContract.BranchColumns.TYPE, 0);
                         mNewBatchValues.put(BranchContract.BranchColumns.STEM_ID, k);
                         mNewBatchValues.put(BranchContract.BranchColumns.SYNCED, 0);
                         mContentResolver.insert(BranchContract.BRANCH_URI, mNewBatchValues);
@@ -371,7 +353,7 @@ public class BLL {
             Uri uriInsertFrame = mContentResolver.insert(CoordinateContract.COORDINATE_URI, mNewValues);
         }
         ContentValues mNewValues = new ContentValues();
-        mNewValues.put(BranchContract.BranchColumns.SYNCED,1);
+        mNewValues.put(BatchContract.BatchColumns.SYNCED,1);
         //Guardar en Base de datos
         return mContentResolver.update(Uri.withAppendedPath(BatchContract.BATCH_URI,batchId.toString()), mNewValues,null,null);
     }

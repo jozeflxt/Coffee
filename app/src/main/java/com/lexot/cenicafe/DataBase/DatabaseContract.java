@@ -45,11 +45,9 @@ public class DatabaseContract {
 
         public static final String TABLE_NAME = "branch";
         public static final String COLUMN_NAME_BRANCH_DATE = "date";
-        public static final String COLUMN_NAME_BRANCH_TYPE = "type";
         public static final String COLUMN_NAME_BRANCH_TREEID = "treeid";
         public static final String COLUMN_NAME_BRANCH_INDEX = "indexBranch";
         public static final String COLUMN_NAME_BRANCH_STEMID = "stemid";
-        public static final String COLUMN_NAME_BRANCH_VIDEO = "video";
         public static final String COLUMN_NAME_BRANCH_REALID = "realid";
         public static final String COLUMN_NAME_SYNCED = "synced";
 
@@ -57,11 +55,9 @@ public class DatabaseContract {
                 "CREATE TABLE " + Branches.TABLE_NAME + " (" +
                         Branches._ID + " INTEGER PRIMARY KEY," +
                         Branches.COLUMN_NAME_BRANCH_DATE + TEXT_TYPE + COMMA_SEP +
-        Branches.COLUMN_NAME_BRANCH_TYPE + INTEGER_TYPE + COMMA_SEP+
                         Branches.COLUMN_NAME_BRANCH_TREEID + INTEGER_TYPE + COMMA_SEP+
                         Branches.COLUMN_NAME_BRANCH_INDEX + INTEGER_TYPE + COMMA_SEP+
                         Branches.COLUMN_NAME_BRANCH_STEMID + INTEGER_TYPE + COMMA_SEP+
-                        Branches.COLUMN_NAME_BRANCH_VIDEO + TEXT_TYPE + COMMA_SEP+
                         Branches.COLUMN_NAME_SYNCED + INTEGER_TYPE + COMMA_SEP+
         Branches.COLUMN_NAME_BRANCH_REALID + INTEGER_TYPE +
                 " )";

@@ -1,15 +1,11 @@
 package com.lexot.cenicafe;
 
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
-import android.media.CamcorderProfile;
-import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -23,18 +19,15 @@ import android.widget.TextView;
 
 import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeInfoDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
-import com.lexot.cenicafe.ContentProvider.BranchContract;
 import com.lexot.cenicafe.Models.BLL;
 import com.lexot.cenicafe.Models.CoffeeBranch;
 import com.lexot.cenicafe.Models.CoffeeFrame;
-import com.lexot.cenicafe.Services.VideoSplitService;
 import com.lexot.cenicafe.Utils.DrawingView;
 import com.lexot.cenicafe.Utils.Utilities;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,21 +36,16 @@ public class MainActivity extends BaseActivity implements
 
     public static String BRANCH_ID_PARAM = "branchIdParam";
 
-    private boolean isVideo;
     SharedPreferences pref;
     private DrawingView drawingView;
     private Camera mCamera;
-    private MediaRecorder mediaRecorder;
     private boolean recording;
-    private String fileOut;
     private Long startRecording;
     private int widthCamera;
     private int heightCamera;
 
     private List<String> focusModes;
     private MainActivity context;
-    private File videoFile;
-    private int fps;
     private File myDirectory;
     private String nameFolder;
     private CoffeeBranch coffeeBranch = new CoffeeBranch();
@@ -71,7 +59,6 @@ public class MainActivity extends BaseActivity implements
         Bundle b = getIntent().getExtras();
         if (b != null) {
             coffeeBranch = bll.getBranch(b.getInt(MainActivity.BRANCH_ID_PARAM));
-            isVideo = coffeeBranch.Type.equals(1);
         } else {
             finish();
         }
@@ -122,28 +109,6 @@ public class MainActivity extends BaseActivity implements
         mCamera.setDisplayOrientation(90);
         widthCamera = parameters.getPreviewSize().width;
         heightCamera = parameters.getPreviewSize().height;
-        if (isVideo) {
-            mCamera.unlock();
-            mediaRecorder = new MediaRecorder();
-            mediaRecorder.setCamera(mCamera);
-            mediaRecorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
-            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-            CamcorderProfile cpHigh = CamcorderProfile
-                    .get(CamcorderProfile.QUALITY_HIGH);
-            fps = cpHigh.videoFrameRate;
-            mediaRecorder.setProfile(cpHigh);
-            videoFile = new File(nameFolder, "video.avi"); // LInea modificada para omitir la fecha
-            fileOut = videoFile.toString();
-            mediaRecorder.setOutputFile(fileOut);
-            mediaRecorder.setPreviewDisplay(holder.getSurface());
-            mediaRecorder.setOrientationHint(90);
-            try {
-                mediaRecorder.prepare();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mCamera.lock();
-        }
     }
 
     @Override
@@ -180,18 +145,6 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void saveData() {
-        String videoPath = "";
-        if(isVideo) {
-            videoPath = videoFile.getPath();
-        }
-        int changes = bll.updateBranch(coffeeBranch.Id, videoPath);
-        //Iniciar servicio para cortar video
-        if(changes > 0 && isVideo) {
-            Intent videoSplitService = new Intent(context, VideoSplitService.class);
-            videoSplitService.setData(Uri.withAppendedPath(BranchContract.BRANCH_URI, coffeeBranch.Id.toString()));
-            videoSplitService.putExtra("fps",fps);
-            context.startService(videoSplitService);
-        }
         //Iniciar sincronización
         //Intent syncService = new Intent(context, SyncService.class);
         //syncService.setData(Uri.withAppendedPath(BranchContract.BRANCH_URI, idBranch.toString()));
@@ -216,58 +169,42 @@ public class MainActivity extends BaseActivity implements
             touchFocus();
         }
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
-            if (isVideo) {
-                //Detener grabación
-                if (recording) {
-                    mediaRecorder.stop();
-                    mediaRecorder.reset();
-                    mediaRecorder.release();
-                    recording = false;
-                    releaseCameraAndPreview();
-                    onBackPressed();
-                } else {
-                    recording = true;
-                    mCamera.unlock();
-                    mediaRecorder.start();
-                }
-            } else {
-                startRecording = System.currentTimeMillis();
-                mCamera.setOneShotPreviewCallback(new Camera.PreviewCallback() {
+            startRecording = System.currentTimeMillis();
+            mCamera.setOneShotPreviewCallback(new Camera.PreviewCallback() {
 
-                    public void onPreviewFrame(byte[] _data, final Camera _camera) {
-                        Long timeFrame =  System.currentTimeMillis() - startRecording;
-                        ByteArrayOutputStream out_str = new ByteArrayOutputStream();
-                        Rect rect = new Rect(0, 0, widthCamera, heightCamera);
-                        YuvImage yuvimage = new YuvImage(_data,
-                                ImageFormat.NV21, widthCamera, heightCamera, null);
-                        yuvimage.compressToJpeg(rect, 100, out_str);
+                public void onPreviewFrame(byte[] _data, final Camera _camera) {
+                    Long timeFrame =  System.currentTimeMillis() - startRecording;
+                    ByteArrayOutputStream out_str = new ByteArrayOutputStream();
+                    Rect rect = new Rect(0, 0, widthCamera, heightCamera);
+                    YuvImage yuvimage = new YuvImage(_data,
+                            ImageFormat.NV21, widthCamera, heightCamera, null);
+                    yuvimage.compressToJpeg(rect, 100, out_str);
 
-                        CoffeeFrame coffeeFrame = new CoffeeFrame();
-                        coffeeFrame.Time = timeFrame.intValue();
-                        coffeeFrame.Factor = 0d;
+                    CoffeeFrame coffeeFrame = new CoffeeFrame();
+                    coffeeFrame.Time = timeFrame.intValue();
+                    coffeeFrame.Factor = 0d;
 
 
-                        Utilities.writeToFile(myDirectory,timeFrame + ".jpg",out_str.toByteArray());
+                    Utilities.writeToFile(myDirectory,timeFrame + ".jpg",out_str.toByteArray());
 
-                        coffeeFrame.Data = myDirectory.getPath()+"/"+timeFrame + ".jpg";
-                        coffeeFrame.BranchId = coffeeBranch.Id;
-                        bll.createFrame(coffeeFrame);
+                    coffeeFrame.Data = myDirectory.getPath()+"/"+timeFrame + ".jpg";
+                    coffeeFrame.BranchId = coffeeBranch.Id;
+                    bll.createFrame(coffeeFrame);
 
-                        int timeFreeze = Integer.parseInt(pref.getString("timeFreeze","0"));
-                        if(timeFreeze > 0) {
-                            _camera.stopPreview();
-                            Handler handlerFreeze = new Handler();
-                            handlerFreeze.postDelayed(new Runnable()
-                            {
-                                @Override
-                                public void run() {
-                                    _camera.startPreview();
-                                }
-                            }, timeFreeze * 1000 );
-                        }
+                    int timeFreeze = Integer.parseInt(pref.getString("timeFreeze","0"));
+                    if(timeFreeze > 0) {
+                        _camera.stopPreview();
+                        Handler handlerFreeze = new Handler();
+                        handlerFreeze.postDelayed(new Runnable()
+                        {
+                            @Override
+                            public void run() {
+                                _camera.startPreview();
+                            }
+                        }, timeFreeze * 1000 );
                     }
-                });
-            }
+                }
+            });
         }
         return true;
     }
@@ -350,14 +287,6 @@ public class MainActivity extends BaseActivity implements
 
 
     private void releaseCameraAndPreview() {
-        try {
-            if (mediaRecorder != null) {
-                mediaRecorder.setCamera(null);
-            }
-        }
-        catch(Exception e) {
-
-        }
         try {
             if (mCamera != null) {
                 mCamera.setPreviewCallback(null);

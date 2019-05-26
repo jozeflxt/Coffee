@@ -47,7 +47,6 @@ public class ViewBranch  extends LinearLayout implements View.OnClickListener {
         this.txtBranch = findViewById(R.id.txtBranch);
         this.txtFrames = findViewById(R.id.txtFrames);
         this.syncContainer = findViewById(R.id.syncContainer);
-        this.txtType = findViewById(R.id.txtType);
         this.txtProgress = findViewById(R.id.txtProgress);
         this.setOnClickListener(this);
         btnRegisterPhoto = findViewById(R.id.btnRegisterPhoto);
@@ -83,16 +82,12 @@ public class ViewBranch  extends LinearLayout implements View.OnClickListener {
         Id = item.Id;
         txtBranch.setText("Rama " + item.Index);
 
-        if(item.Type == 2)
-            txtType.setText("Fotos.");
-        if(item.Type == 1)
-            txtType.setText("Video.");
-        if(item.Type != 0) {
+        if(item.Synced != 0) {
             syncContainer.setVisibility(VISIBLE);
             btnRegisterPhoto.setVisibility(GONE);
             btnRegisterVideo.setVisibility(GONE);
             txtFrames.setText(item.FramesCount.toString() + " Frames");
-            if(item.Synced) {
+            if(item.Synced == 2) {
                 txtProgress.setText("Sincronizado");
                 txtProgress.setTextColor(getResources().getColor(R.color.colorPrimary));
             }

@@ -67,9 +67,6 @@
             android:name=".Services.SyncService"
             android:exported="false" />
         <service
-            android:name=".Services.VideoSplitService"
-            android:exported="false" />
-        <service
             android:name=".Services.FactorService"
             android:exported="false" />
 

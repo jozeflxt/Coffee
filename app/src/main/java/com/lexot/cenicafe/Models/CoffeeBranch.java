@@ -10,10 +10,8 @@ public class CoffeeBranch implements Serializable {
     public Integer TreeId;
     public Integer StemId;
     public String Date;
-    public String VideoUrl;
-    public Integer Type;
     public Integer FramesCount;
-    public Boolean Synced;
+    public Integer Synced;
     public Integer TreeBackendId;
 
     public String getPath() {

@@ -38,8 +38,6 @@ public final class BranchContract {
 
         private BranchColumns(){}
 
-        public static final String TYPE = DatabaseContract.Branches.COLUMN_NAME_BRANCH_TYPE;
-        public static final String VIDEO = DatabaseContract.Branches.COLUMN_NAME_BRANCH_VIDEO;
         public static final String REAL_ID = DatabaseContract.Branches.COLUMN_NAME_BRANCH_REALID;
         public static final String TREE_ID = DatabaseContract.Branches.COLUMN_NAME_BRANCH_TREEID;
         public static final String INDEX = DatabaseContract.Branches.COLUMN_NAME_BRANCH_INDEX;
