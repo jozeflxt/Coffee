@@ -48,7 +48,7 @@ public class ListActivity extends AppCompatActivity implements BranchListener {
         list.setLayoutManager(layoutManager);
     }
     @Override
-    public void captureFrames(Integer type, Integer branchId) {
+    public void captureFrames(Integer branchId) {
         Intent i = new Intent(this,MainActivity.class);
         Bundle b = new Bundle();
         b.putInt(MainActivity.BRANCH_ID_PARAM, branchId);

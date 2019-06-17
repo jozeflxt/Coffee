@@ -32,21 +32,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="20dp" />
-
-            <com.rilixtech.materialfancybutton.MaterialFancyButton
-                android:id="@+id/btnRegisterVideo"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginRight="10dp"
-                app:mfb_defaultColor="@color/colorPrimaryDark"
-                app:mfb_focusColor="@android:color/white"
-                app:mfb_radius="25dp"
-                app:mfb_text=""
-                app:mfb_icon="@string/fawi_video_camera"
-                app:mfb_fontIconSize="14dp"
-                android:layout_toLeftOf="@id/btnRegisterPhoto"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="20dp" />
             <LinearLayout
                 android:padding="10dp"
                 android:layout_width="match_parent"

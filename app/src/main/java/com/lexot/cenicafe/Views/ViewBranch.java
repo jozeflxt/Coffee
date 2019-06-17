@@ -27,13 +27,11 @@ public class ViewBranch  extends LinearLayout implements View.OnClickListener {
     private final Context context;
     private BranchListener listener;
     TextView txtBranch;
-    TextView txtType;
     TextView txtProgress;
     TextView txtFrames;
     View syncContainer;
     private Integer Id;
     MaterialFancyButton btnRegisterPhoto;
-    MaterialFancyButton btnRegisterVideo;
 
     public ViewBranch(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -52,9 +50,6 @@ public class ViewBranch  extends LinearLayout implements View.OnClickListener {
         btnRegisterPhoto = findViewById(R.id.btnRegisterPhoto);
         btnRegisterPhoto.setOnClickListener(this);
         PushDownAnim.setPushDownAnimTo(btnRegisterPhoto);
-        btnRegisterVideo = findViewById(R.id.btnRegisterVideo);
-        btnRegisterVideo.setOnClickListener(this);
-        PushDownAnim.setPushDownAnimTo(btnRegisterVideo);
     }
 
     @Override
@@ -85,7 +80,6 @@ public class ViewBranch  extends LinearLayout implements View.OnClickListener {
         if(item.Synced != 0) {
             syncContainer.setVisibility(VISIBLE);
             btnRegisterPhoto.setVisibility(GONE);
-            btnRegisterVideo.setVisibility(GONE);
             txtFrames.setText(item.FramesCount.toString() + " Frames");
             if(item.Synced == 2) {
                 txtProgress.setText("Sincronizado");
@@ -111,11 +105,8 @@ public class ViewBranch  extends LinearLayout implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnRegisterVideo:
-                listener.captureFrames(1, Id);
-                break;
             case R.id.btnRegisterPhoto:
-                listener.captureFrames(2, Id);
+                listener.captureFrames(Id);
                 break;
             default:
                 break;
