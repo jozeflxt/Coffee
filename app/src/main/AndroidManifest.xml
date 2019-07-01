@@ -84,10 +84,6 @@
             android:value="AIzaSyDB2ed_TZmI720lgcNDAEqa02pf4gD9SHE" />
 
         <activity android:name=".TreeActivity" />
-        <activity
-            android:name=".TrackGPSActivity"
-            android:label="@string/title_activity_track_gps"
-            android:theme="@style/AppTheme"></activity>
         <uses-library android:required="true" android:name="com.google.android.maps" />
     </application>
 

@@ -10,6 +10,7 @@ public class CoffeeBatch implements Serializable, Searchable {
     public Integer Id;
     public Integer Age;
     public Integer Trees;
+    public Integer TotalTrees;
     public Integer BranchesAmmount;
     public String Name;
     public Integer Stems;

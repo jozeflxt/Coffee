@@ -13,7 +13,6 @@ import com.lexot.cenicafe.BatchActivity;
 import com.lexot.cenicafe.BatchMapActivity;
 import com.lexot.cenicafe.Models.CoffeeBatch;
 import com.lexot.cenicafe.R;
-import com.lexot.cenicafe.TrackGPSActivity;
 import com.lexot.cenicafe.TreeActivity;
 import com.rilixtech.materialfancybutton.MaterialFancyButton;
 import com.thekhaeng.pushdownanim.PushDownAnim;
@@ -27,6 +26,7 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
     TextView txtBranches;
     TextView txtStems;
     TextView txtTrees;
+    TextView txtTotalTrees;
     View moreDetailsView;
     Integer idBatch;
     Integer synced;
@@ -43,6 +43,7 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
         this.txtBranches = findViewById(R.id.txtBranches);
         this.txtStems = findViewById(R.id.txtStems);
         this.txtTrees = findViewById(R.id.txtTrees);
+        this.txtTotalTrees = findViewById(R.id.txtTotalTrees);
         this.moreDetailsView = findViewById(R.id.moreDetailsView);
         this.setOnClickListener(this);
         MaterialFancyButton btnAddBatch = findViewById(R.id.btnDetail);
@@ -62,6 +63,7 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
         txtBranches.setText(item.BranchesAmmount.toString());
         txtStems.setText(item.Stems.toString());
         txtTrees.setText(item.Trees.toString());
+        txtTotalTrees.setText(item.TotalTrees.toString());
     }
 
     @Override
@@ -79,7 +81,7 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
                 break;
             default:
                 if (synced == 0) {
-                   /* new AwesomeInfoDialog(getContext())
+                   new AwesomeInfoDialog(getContext())
                             .setTitle("Geolocalización")
                             .setMessage("¿Cómo deseas tomar la información?")
                             .setColoredCircle(R.color.dialogSuccessBackgroundColor)
@@ -94,17 +96,16 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
                             .setPositiveButtonClick(new Closure() {
                                 @Override
                                 public void exec() {
-                                    startDraw();
+                                    startDraw(true);
                                 }
                             })
                             .setNegativeButtonClick(new Closure() {
                                 @Override
                                 public void exec() {
-                                    startGPS();
+                                    //startGPS();
                                 }
                             })
-                            .show();*/
-                   startDraw(true);
+                            .show();
                    break;
                 } else {
                     Intent intent = new Intent(getContext(), TreeActivity.class);
@@ -114,15 +115,12 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
         }
     }
 
-
-    public void startGPS() {
-        Intent intent = new Intent(getContext(), TrackGPSActivity.class);
-        getContext().startActivity(intent);
-    }
     public void startDraw(Boolean isCreating) {
         Intent intent = new Intent(getContext(), BatchMapActivity.class);
         intent.putExtra(BatchMapActivity.BATCH_ID_PARAM, idBatch);
         intent.putExtra(BatchMapActivity.CREATING_PARAM, isCreating);
         ((BatchActivity)getContext()).startActivityForResult(intent, 0);
     }
+
+
 }

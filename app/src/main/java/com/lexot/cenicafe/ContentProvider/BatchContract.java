@@ -26,6 +26,7 @@ public final class BatchContract {
         public static final String AGE = DatabaseContract.Batches.COLUMN_NAME_BATCH_AGE;
         public static final String BRANCHES = DatabaseContract.Batches.COLUMN_NAME_BATCH_BRANCHES;
         public static final String TREES = DatabaseContract.Batches.COLUMN_NAME_BATCH_TREES;
+        public static final String TOTAL_TREES = DatabaseContract.Batches.COLUMN_NAME_BATCH_TOTAL_TREES;
         public static final String STEMS = DatabaseContract.Batches.COLUMN_NAME_BATCH_STEMS;
         public static final String REAL_ID = DatabaseContract.Batches.COLUMN_NAME_BATCH_REAL_ID;
         public static final String SYNCED = DatabaseContract.Branches.COLUMN_NAME_SYNCED;
