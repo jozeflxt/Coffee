@@ -107,7 +107,8 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(LatLng latLng) {
-                    mMap.addMarker(new MarkerOptions().position(latLng).draggable(true));
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).draggable(true));
+                    marker.setTag(coordinates.size());
                     coordinates.add(latLng);
                     if (coordinates.size() > 2) {
                         fab.setVisibility(View.VISIBLE);
@@ -122,17 +123,17 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
             mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                 @Override
                 public void onMarkerDragStart(Marker marker) {
-                    drawRegion();
+                    changeLatLng((int)marker.getTag(), marker.getPosition());
                 }
 
                 @Override
                 public void onMarkerDrag(Marker marker) {
-                    drawRegion();
+                    changeLatLng((int)marker.getTag(), marker.getPosition());
                 }
 
                 @Override
                 public void onMarkerDragEnd(Marker marker) {
-                    drawRegion();
+                    changeLatLng((int)marker.getTag(), marker.getPosition());
                 }
             });
         } else {
@@ -150,6 +151,11 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
                 drawRegion();
             }
         }
+    }
+
+    public void changeLatLng(int index, LatLng latLng) {
+        coordinates.set(index, latLng);
+        drawRegion();
     }
 
     public void drawRegion() {

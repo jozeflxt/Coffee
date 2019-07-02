@@ -45,8 +45,8 @@ public class InitialActivity extends BaseActivity {
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
         //Iniciar sincronización
-        Intent syncService = new Intent(this, SyncService.class);
-        startService(syncService);
+        //Intent syncService = new Intent(this, SyncService.class);
+        //startService(syncService);
     }
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override

@@ -11,6 +11,7 @@ import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeInfoDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.lexot.cenicafe.BatchActivity;
 import com.lexot.cenicafe.BatchMapActivity;
+import com.lexot.cenicafe.GpsActivity;
 import com.lexot.cenicafe.Models.CoffeeBatch;
 import com.lexot.cenicafe.R;
 import com.lexot.cenicafe.TreeActivity;
@@ -102,7 +103,7 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
                             .setNegativeButtonClick(new Closure() {
                                 @Override
                                 public void exec() {
-                                    //startGPS();
+                                    startGPS();
                                 }
                             })
                             .show();
@@ -122,5 +123,10 @@ public class ViewBatch  extends LinearLayout implements View.OnClickListener {
         ((BatchActivity)getContext()).startActivityForResult(intent, 0);
     }
 
+    public void startGPS() {
+        Intent intent = new Intent(getContext(), GpsActivity.class);
+        intent.putExtra(BatchMapActivity.BATCH_ID_PARAM, idBatch);
+        ((BatchActivity)getContext()).startActivityForResult(intent, 0);
+    }
 
 }

@@ -30,6 +30,7 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
@@ -84,7 +85,12 @@
             android:value="AIzaSyDB2ed_TZmI720lgcNDAEqa02pf4gD9SHE" />
 
         <activity android:name=".TreeActivity" />
-        <uses-library android:required="true" android:name="com.google.android.maps" />
+
+        <uses-library
+            android:name="com.google.android.maps"
+            android:required="true" />
+
+        <activity android:name=".GpsActivity"></activity>
     </application>
 
 </manifest>
