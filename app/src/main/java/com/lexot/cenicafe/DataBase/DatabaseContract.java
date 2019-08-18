@@ -96,6 +96,7 @@ public class DatabaseContract {
         public static final String COLUMN_NAME_COORDINATE_LNG = "lng";
         public static final String COLUMN_NAME_COORDINATE_INDEX = "indexCoordinate";
         public static final String COLUMN_NAME_COORDINATE_BATCHID = "batchId";
+        public static final String COLUMN_NAME_SYNCED = "synced";
 
         public static final String SQL_CREATE_COORDINATES_TABLE =
                 "CREATE TABLE " + Coordinates.TABLE_NAME + " (" +
@@ -103,6 +104,7 @@ public class DatabaseContract {
                         Coordinates.COLUMN_NAME_COORDINATE_LAT + REAL_TYPE + COMMA_SEP +
                         Coordinates.COLUMN_NAME_COORDINATE_LNG + REAL_TYPE + COMMA_SEP+
                         Coordinates.COLUMN_NAME_COORDINATE_INDEX + INTEGER_TYPE + COMMA_SEP+
+                        Coordinates.COLUMN_NAME_SYNCED + INTEGER_TYPE + COMMA_SEP+
                         Coordinates.COLUMN_NAME_COORDINATE_BATCHID + INTEGER_TYPE +
                         " )";
 

@@ -106,6 +106,34 @@ public class BLL {
         return trees;
     }
 
+
+    public ArrayList<CoffeeLatLng> getNoSyncedCoordinates() {
+        ArrayList<CoffeeLatLng> coordinates = new ArrayList<CoffeeLatLng>();
+        SQLiteDatabase db = CoffeeDbHelper.getInstance(context).getReadableDatabase();
+        String query = "SELECT c.*, b." + DatabaseContract.Batches.COLUMN_NAME_BATCH_REAL_ID  +  " as BatchBackendId " +
+                " FROM " + DatabaseContract.Coordinates.TABLE_NAME + " AS c " +
+                " JOIN " + DatabaseContract.Batches.TABLE_NAME + " AS b ON c."+DatabaseContract.Coordinates.COLUMN_NAME_COORDINATE_BATCHID+"=b." + DatabaseContract.Batches._ID +
+                " WHERE c." + DatabaseContract.Coordinates.COLUMN_NAME_SYNCED + "=1" +
+                " AND b." + DatabaseContract.Batches.COLUMN_NAME_BATCH_REAL_ID + ">0" +
+                " GROUP BY c." + DatabaseContract.Coordinates._ID +
+                " ORDER BY c." + DatabaseContract.Coordinates._ID + " ASC";
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()) {
+            CoffeeLatLng coffeeLatLng = new CoffeeLatLng();
+            coffeeLatLng.Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+            coffeeLatLng.Synced = cursor.getInt(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.SYNCED)) == 2;
+            coffeeLatLng.BatchId = cursor.getInt(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.BATCH_ID));
+            coffeeLatLng.Index = cursor.getInt(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.INDEX));
+            coffeeLatLng.Lat = cursor.getDouble(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.LAT));
+            coffeeLatLng.Lng = cursor.getDouble(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.LNG));
+            coordinates.add(coffeeLatLng);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return coordinates;
+    }
+
     public ArrayList<CoffeeTree> getNoSyncedTrees() {
         ArrayList<CoffeeTree> trees = new ArrayList<CoffeeTree>();
         SQLiteDatabase db = CoffeeDbHelper.getInstance(context).getReadableDatabase();
@@ -325,6 +353,7 @@ public class BLL {
             mNewValues.put(CoordinateContract.CoordinateColumns.LNG, coordinates.get(i).longitude);
             mNewValues.put(CoordinateContract.CoordinateColumns.INDEX, i);
             mNewValues.put(CoordinateContract.CoordinateColumns.BATCH_ID, batchId);
+            mNewValues.put(CoordinateContract.CoordinateColumns.SYNCED, 1);
             Uri uriInsertFrame = mContentResolver.insert(CoordinateContract.COORDINATE_URI, mNewValues);
         }
         ContentValues mNewValues = new ContentValues();
@@ -343,6 +372,7 @@ public class BLL {
             coordinate.Lat = cursor.getDouble(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.LAT));
             coordinate.Lng = cursor.getDouble(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.LNG));
             coordinate.Index = cursor.getInt(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.INDEX));
+            coordinate.Lat = cursor.getDouble(cursor.getColumnIndexOrThrow(CoordinateContract.CoordinateColumns.LAT));
             coordinates.add(coordinate);
             cursor.moveToNext();
         }
@@ -384,6 +414,13 @@ public class BLL {
         return mContentResolver.update(Uri.withAppendedPath(TreeContract.TREE_URI,treeId.toString()), mNewValues,null,null);
     }
 
+    public int updateSyncCoordinate(Integer coordinateId) {
+        ContentValues mNewValues = new ContentValues();
+        mNewValues.put(CoordinateContract.CoordinateColumns.SYNCED,2);
+        //Guardar en Base de datos
+        return mContentResolver.update(Uri.withAppendedPath(CoordinateContract.COORDINATE_URI,coordinateId.toString()), mNewValues,null,null);
+    }
+
     public int updateSyncBranch(Integer branchId, Integer backendId) {
         ContentValues mNewValues = new ContentValues();
         mNewValues.put(BranchContract.BranchColumns.SYNCED,2);
@@ -392,7 +429,7 @@ public class BLL {
         return mContentResolver.update(Uri.withAppendedPath(BranchContract.BRANCH_URI,branchId.toString()), mNewValues,null,null);
     }
 
-    public int updateSyncFrame(Integer frameId, Integer backendId) {
+    public int updateSyncFrame(Integer frameId) {
         ContentValues mNewValues = new ContentValues();
         mNewValues.put(FrameContract.FrameColumns.SYNCED,2);
         //Guardar en Base de datos

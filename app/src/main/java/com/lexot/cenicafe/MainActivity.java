@@ -1,6 +1,7 @@
 package com.lexot.cenicafe;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
@@ -22,6 +23,7 @@ import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.lexot.cenicafe.Models.BLL;
 import com.lexot.cenicafe.Models.CoffeeBranch;
 import com.lexot.cenicafe.Models.CoffeeFrame;
+import com.lexot.cenicafe.Services.SyncService;
 import com.lexot.cenicafe.Utils.DrawingView;
 import com.lexot.cenicafe.Utils.Utilities;
 
@@ -149,9 +151,8 @@ public class MainActivity extends BaseActivity implements
 
     public void saveData() {
         //Iniciar sincronización
-        //Intent syncService = new Intent(context, SyncService.class);
-        //syncService.setData(Uri.withAppendedPath(BranchContract.BRANCH_URI, idBranch.toString()));
-        //context.startService(syncService);
+        Intent syncService = new Intent(context, SyncService.class);
+        context.startService(syncService);
         setResult(RESULT_OK);
         context.finish();
     }
