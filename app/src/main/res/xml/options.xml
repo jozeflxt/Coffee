@@ -5,12 +5,7 @@
             android:key="autoFocus"
             android:title="Auto Enfoque"
             android:summary="La cámara mantendrá el autoenfoque luego de enfocar la primera vez" />
-        <EditTextPreference
-            android:key="timeFreeze"
-            android:inputType="number"
-            android:title="Tiempo Espera"
-            android:summary="Tiempo de espera entre fotos"
-            android:dialogTitle="Introduce valor" />
+
         <com.lexot.cenicafe.Views.PercentagePreference
             android:key="focusSquare"
             android:title="Área de enfoque"

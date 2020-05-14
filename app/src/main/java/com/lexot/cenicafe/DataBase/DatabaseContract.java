@@ -20,6 +20,7 @@ public class DatabaseContract {
         public static final String COLUMN_NAME_BATCH_NAME = "name";
         public static final String COLUMN_NAME_BATCH_AGE = "age";
         public static final String COLUMN_NAME_BATCH_TREES = "trees";
+        public static final String COLUMN_NAME_BATCH_TOTAL_TREES = "totalTrees";
         public static final String COLUMN_NAME_BATCH_BRANCHES = "branches";
         public static final String COLUMN_NAME_BATCH_STEMS = "stems";
         public static final String COLUMN_NAME_BATCH_REAL_ID = "realid";
@@ -31,6 +32,7 @@ public class DatabaseContract {
                         Batches.COLUMN_NAME_BATCH_NAME + TEXT_TYPE + COMMA_SEP +
                         Batches.COLUMN_NAME_BATCH_AGE + INTEGER_TYPE + COMMA_SEP +
                         Batches.COLUMN_NAME_BATCH_TREES + INTEGER_TYPE + COMMA_SEP+
+                        Batches.COLUMN_NAME_BATCH_TOTAL_TREES + INTEGER_TYPE + COMMA_SEP+
                         Batches.COLUMN_NAME_BATCH_BRANCHES + INTEGER_TYPE + COMMA_SEP+
                         Batches.COLUMN_NAME_BATCH_STEMS + INTEGER_TYPE + COMMA_SEP+
                         Batches.COLUMN_NAME_SYNCED + INTEGER_TYPE + COMMA_SEP+
@@ -94,6 +96,7 @@ public class DatabaseContract {
         public static final String COLUMN_NAME_COORDINATE_LNG = "lng";
         public static final String COLUMN_NAME_COORDINATE_INDEX = "indexCoordinate";
         public static final String COLUMN_NAME_COORDINATE_BATCHID = "batchId";
+        public static final String COLUMN_NAME_SYNCED = "synced";
 
         public static final String SQL_CREATE_COORDINATES_TABLE =
                 "CREATE TABLE " + Coordinates.TABLE_NAME + " (" +
@@ -101,6 +104,7 @@ public class DatabaseContract {
                         Coordinates.COLUMN_NAME_COORDINATE_LAT + REAL_TYPE + COMMA_SEP +
                         Coordinates.COLUMN_NAME_COORDINATE_LNG + REAL_TYPE + COMMA_SEP+
                         Coordinates.COLUMN_NAME_COORDINATE_INDEX + INTEGER_TYPE + COMMA_SEP+
+                        Coordinates.COLUMN_NAME_SYNCED + INTEGER_TYPE + COMMA_SEP+
                         Coordinates.COLUMN_NAME_COORDINATE_BATCHID + INTEGER_TYPE +
                         " )";
 

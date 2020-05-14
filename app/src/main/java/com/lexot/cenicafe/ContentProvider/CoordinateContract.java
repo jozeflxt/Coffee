@@ -25,6 +25,7 @@ public class CoordinateContract {
         public static final String BATCH_ID = DatabaseContract.Coordinates.COLUMN_NAME_COORDINATE_BATCHID;
         public static final String LAT = DatabaseContract.Coordinates.COLUMN_NAME_COORDINATE_LAT;
         public static final String LNG = DatabaseContract.Coordinates.COLUMN_NAME_COORDINATE_LNG;
+        public static final String SYNCED = DatabaseContract.Coordinates.COLUMN_NAME_SYNCED;
         public static final String INDEX = DatabaseContract.Coordinates.COLUMN_NAME_COORDINATE_INDEX;
         public static final String DEFAULT_SORT_ORDER = INDEX + " ASC";
     }

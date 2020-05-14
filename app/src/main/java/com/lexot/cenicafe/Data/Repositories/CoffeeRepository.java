@@ -7,9 +7,11 @@ import com.lexot.cenicafe.Data.ApiResponses.DefaultResponse;
 import com.lexot.cenicafe.Data.ApiResponses.FrameResponse;
 import com.lexot.cenicafe.Data.IRestClient;
 import com.lexot.cenicafe.Data.RestClient;
+import com.lexot.cenicafe.DataBase.DatabaseContract;
 import com.lexot.cenicafe.Models.CoffeeBatch;
 import com.lexot.cenicafe.Models.CoffeeBranch;
 import com.lexot.cenicafe.Models.CoffeeFrame;
+import com.lexot.cenicafe.Models.CoffeeLatLng;
 import com.lexot.cenicafe.Models.CoffeeTree;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
@@ -31,10 +33,20 @@ public class CoffeeRepository {
         return apiService.postCoffeeBatch(
                 RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBatch.Age.toString()),
                 RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBatch.Trees.toString()),
+                RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBatch.TotalTrees.toString()),
                 RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBatch.BranchesAmmount.toString()),
                 RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBatch.Name.toString()),
                 RequestBody.create(MediaType.parse("multipart/form-data"),coffeeBatch.Stems.toString()),
                 RequestBody.create(MediaType.parse("text/plain"),udid));
+    }
+
+    public Call<DefaultResponse> PostCoordinate(CoffeeLatLng coordinate) {
+        return apiService.postCoordinate(
+                RequestBody.create(MediaType.parse("multipart/form-data"),coordinate.BatchId.toString()),
+                RequestBody.create(MediaType.parse("multipart/form-data"),coordinate.Index.toString()),
+                RequestBody.create(MediaType.parse("multipart/form-data"),coordinate.Lat.toString()),
+                RequestBody.create(MediaType.parse("multipart/form-data"),coordinate.Lng.toString())
+        );
     }
 
     public Call<DefaultResponse> PostCoffeeTree(CoffeeTree coffeeTree, Integer parentBackedId) {
@@ -69,7 +81,4 @@ public class CoffeeRepository {
                 RequestBody.create(MediaType.parse("text/plain"), Build.PRODUCT));
     }
 
-    public Call<List<CoffeeBranch>>GetBranches(String user){
-        return apiService.getBranches(user);
-    }
 }

@@ -23,6 +23,7 @@ public class NewBatchActivity extends AppCompatActivity {
     private EditText nameEditText;
     private EditText ageEditText;
     private EditText treeEditText;
+    private EditText totalTreeEditText;
     private EditText branchEditText;
     private EditText stemEditText;
 
@@ -33,6 +34,7 @@ public class NewBatchActivity extends AppCompatActivity {
         nameEditText = findViewById(R.id.nameEditText);
         ageEditText = findViewById(R.id.ageEditText);
         treeEditText = findViewById(R.id.treeEditText);
+        totalTreeEditText = findViewById(R.id.totalTreeEditText);
         branchEditText = findViewById(R.id.branchEditText);
         stemEditText = findViewById(R.id.stemEditText);
 
@@ -45,6 +47,7 @@ public class NewBatchActivity extends AppCompatActivity {
         Integer branchesAmount = Utilities.parseWithDefault(branchEditText.getText().toString(),0);
         Integer stems = Utilities.parseWithDefault(stemEditText.getText().toString(),0);
         Integer trees = Utilities.parseWithDefault(treeEditText.getText().toString(),0);
+        Integer totalTrees = Utilities.parseWithDefault(totalTreeEditText.getText().toString(),0);
         if (nameEditText.getText().toString().isEmpty()) { error = "El nombre del lote es requerido";
         }
         if (!(branchesAmount > 0)) {
@@ -52,6 +55,9 @@ public class NewBatchActivity extends AppCompatActivity {
         }
         if (!(trees > 0)) {
             error = "El número de arboles es requerido";
+        }
+        if (!(totalTrees > 0)) {
+            error = "El número de total de arboles es requerido";
         }
         if (!(stems > 0)) {
             error = "Debe especificar el número de tallos";
@@ -72,6 +78,7 @@ public class NewBatchActivity extends AppCompatActivity {
             coffeeBatch.Name = nameEditText.getText().toString();
             coffeeBatch.Stems = stems;
             coffeeBatch.Trees = trees;
+            coffeeBatch.TotalTrees = totalTrees;
             new BLL(this).createBatch(coffeeBatch);
             Helpers.hideLoading();
             new AwesomeSuccessDialog(this)

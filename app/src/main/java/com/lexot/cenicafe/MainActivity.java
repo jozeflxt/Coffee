@@ -1,6 +1,7 @@
 package com.lexot.cenicafe;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
@@ -22,6 +23,7 @@ import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.lexot.cenicafe.Models.BLL;
 import com.lexot.cenicafe.Models.CoffeeBranch;
 import com.lexot.cenicafe.Models.CoffeeFrame;
+import com.lexot.cenicafe.Services.SyncService;
 import com.lexot.cenicafe.Utils.DrawingView;
 import com.lexot.cenicafe.Utils.Utilities;
 
@@ -50,6 +52,9 @@ public class MainActivity extends BaseActivity implements
     private String nameFolder;
     private CoffeeBranch coffeeBranch = new CoffeeBranch();
     private BLL bll;
+
+    private Boolean cameraStopped = false;
+    private byte[] dataFrame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,9 +151,8 @@ public class MainActivity extends BaseActivity implements
 
     public void saveData() {
         //Iniciar sincronización
-        //Intent syncService = new Intent(context, SyncService.class);
-        //syncService.setData(Uri.withAppendedPath(BranchContract.BRANCH_URI, idBranch.toString()));
-        //context.startService(syncService);
+        Intent syncService = new Intent(context, SyncService.class);
+        context.startService(syncService);
         setResult(RESULT_OK);
         context.finish();
     }
@@ -162,51 +166,52 @@ public class MainActivity extends BaseActivity implements
             return true;
         }
         super.onKeyDown(keyCode, event);
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
-            if (recording) {
-                mCamera.lock();
+        if (cameraStopped) {
+            mCamera.startPreview();
+            cameraStopped = false;
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                saveFrame();
             }
-            touchFocus();
-        }
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
-            startRecording = System.currentTimeMillis();
-            mCamera.setOneShotPreviewCallback(new Camera.PreviewCallback() {
-
-                public void onPreviewFrame(byte[] _data, final Camera _camera) {
-                    Long timeFrame =  System.currentTimeMillis() - startRecording;
-                    ByteArrayOutputStream out_str = new ByteArrayOutputStream();
-                    Rect rect = new Rect(0, 0, widthCamera, heightCamera);
-                    YuvImage yuvimage = new YuvImage(_data,
-                            ImageFormat.NV21, widthCamera, heightCamera, null);
-                    yuvimage.compressToJpeg(rect, 100, out_str);
-
-                    CoffeeFrame coffeeFrame = new CoffeeFrame();
-                    coffeeFrame.Time = timeFrame.intValue();
-                    coffeeFrame.Factor = 0d;
-
-
-                    Utilities.writeToFile(myDirectory,timeFrame + ".jpg",out_str.toByteArray());
-
-                    coffeeFrame.Data = myDirectory.getPath()+"/"+timeFrame + ".jpg";
-                    coffeeFrame.BranchId = coffeeBranch.Id;
-                    bll.createFrame(coffeeFrame);
-
-                    int timeFreeze = Integer.parseInt(pref.getString("timeFreeze","0"));
-                    if(timeFreeze > 0) {
-                        _camera.stopPreview();
-                        Handler handlerFreeze = new Handler();
-                        handlerFreeze.postDelayed(new Runnable()
-                        {
-                            @Override
-                            public void run() {
-                                _camera.startPreview();
-                            }
-                        }, timeFreeze * 1000 );
-                    }
+        } else {
+            if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+                if (recording) {
+                    mCamera.lock();
                 }
-            });
+                touchFocus();
+            }
+            if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+                startRecording = System.currentTimeMillis();
+                mCamera.setOneShotPreviewCallback(new Camera.PreviewCallback() {
+
+                    public void onPreviewFrame(byte[] _data, final Camera _camera) {
+                        dataFrame = _data;
+                        cameraStopped = true;
+                        _camera.stopPreview();
+                    }
+                });
+            }
         }
         return true;
+    }
+
+    public void saveFrame() {
+        Long timeFrame = System.currentTimeMillis() - startRecording;
+        ByteArrayOutputStream out_str = new ByteArrayOutputStream();
+        Rect rect = new Rect(0, 0, widthCamera, heightCamera);
+        YuvImage yuvimage = new YuvImage(dataFrame,
+                ImageFormat.NV21, widthCamera, heightCamera, null);
+        yuvimage.compressToJpeg(rect, 100, out_str);
+
+        CoffeeFrame coffeeFrame = new CoffeeFrame();
+        coffeeFrame.Time = timeFrame.intValue();
+        coffeeFrame.Factor = 0d;
+
+
+        Utilities.writeToFile(myDirectory, timeFrame + ".jpg", out_str.toByteArray());
+
+        coffeeFrame.Data = myDirectory.getPath() + "/" + timeFrame + ".jpg";
+        coffeeFrame.BranchId = coffeeBranch.Id;
+        bll.createFrame(coffeeFrame);
     }
 
     public void touchFocus() {
@@ -269,7 +274,8 @@ public class MainActivity extends BaseActivity implements
         nameFolder = coffeeBranch.getPath();
         //Crear directorio
         myDirectory = new File(nameFolder);
-        if (!myDirectory.mkdirs()) {
+
+        if (!myDirectory.mkdirs() && !myDirectory.exists()) {
             finish();
         };
     }

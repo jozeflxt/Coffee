@@ -1,6 +1,7 @@
 package com.lexot.cenicafe;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 
+import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeErrorDialog;
+import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -41,6 +44,7 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
     private boolean isCreating;
     private BLL bll;
     private int batchId;
+    private View fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +53,23 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
         isCreating = getIntent().getBooleanExtra(CREATING_PARAM,true);
         batchId = getIntent().getIntExtra(BATCH_ID_PARAM,0);
         bll = new BLL(this);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isCreating) {
                     bll.createCoordinates(coordinates, batchId);
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    setResult(RESULT_OK);
+                    finish();
                 }
-                setResult(RESULT_OK);
-                finish();
             }
         });
     }
@@ -100,8 +107,12 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(LatLng latLng) {
-                    mMap.addMarker(new MarkerOptions().position(latLng).draggable(true));
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).draggable(true));
+                    marker.setTag(coordinates.size());
                     coordinates.add(latLng);
+                    if (coordinates.size() > 2) {
+                        fab.setVisibility(View.VISIBLE);
+                    }
                     if (polygon == null) {
                         rectOptions.add(latLng);
                         polygon = mMap.addPolygon(rectOptions);
@@ -112,17 +123,17 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
             mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                 @Override
                 public void onMarkerDragStart(Marker marker) {
-                    drawRegion();
+                    changeLatLng((int)marker.getTag(), marker.getPosition());
                 }
 
                 @Override
                 public void onMarkerDrag(Marker marker) {
-                    drawRegion();
+                    changeLatLng((int)marker.getTag(), marker.getPosition());
                 }
 
                 @Override
                 public void onMarkerDragEnd(Marker marker) {
-                    drawRegion();
+                    changeLatLng((int)marker.getTag(), marker.getPosition());
                 }
             });
         } else {
@@ -140,6 +151,11 @@ public class BatchMapActivity extends FragmentActivity implements OnMapReadyCall
                 drawRegion();
             }
         }
+    }
+
+    public void changeLatLng(int index, LatLng latLng) {
+        coordinates.set(index, latLng);
+        drawRegion();
     }
 
     public void drawRegion() {

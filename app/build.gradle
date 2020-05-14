@@ -36,11 +36,10 @@ dependencies {
     implementation 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     implementation 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     implementation 'com.valdesekamdem.library:md-toast:0.9.0'
-    implementation 'com.github.blennerSilva:AwesomeDialog:2.0.5'
+    implementation 'com.github.blennerSilva:AwesomeDialog:2.0.6'
     implementation 'com.github.mirrajabi:search-dialog:1.2.3'
     implementation 'com.github.thekhaeng:pushdown-anim-click:1.1.1'
     implementation 'com.rilixtech:materialfancybuttons:1.8.7'
     implementation 'com.rilixtech:fontawesome-typeface:4.7.0.4'
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
-    implementation 'com.google.android.gms:play-services-location:+'
 }

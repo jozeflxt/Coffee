@@ -22,6 +22,7 @@ import com.lexot.cenicafe.Models.BLL;
 import com.lexot.cenicafe.Models.CoffeeBatch;
 import com.lexot.cenicafe.Models.CoffeeBranch;
 import com.lexot.cenicafe.Models.CoffeeFrame;
+import com.lexot.cenicafe.Models.CoffeeLatLng;
 import com.lexot.cenicafe.Models.CoffeeTree;
 import com.lexot.cenicafe.Utils.Utilities;
 import com.squareup.okhttp.MediaType;
@@ -46,6 +47,7 @@ public class SyncService extends IntentService {
     private String deviceId;
     private ArrayList<CoffeeBatch> batches;
     private ArrayList<CoffeeTree> trees;
+    private ArrayList<CoffeeLatLng> coordinates;
     private ArrayList<CoffeeBranch> branches;
     private ArrayList<CoffeeFrame> frames;
     public SyncService(String name) {
@@ -61,25 +63,32 @@ public class SyncService extends IntentService {
             if (batches.size() > 0) {
                 syncBatch(batches.get(0));
             } else {
-                if (trees == null) {
-                    trees = bll.getNoSyncedTrees();
+                if (coordinates == null) {
+                    coordinates = bll.getNoSyncedCoordinates();
                 }
-                if (trees.size() > 0) {
-                    syncTree(trees.get(0));
+                if (coordinates.size() > 0) {
+                    syncCoordinate(coordinates.get(0));
                 } else {
-                    if (branches == null) {
-                        branches = bll.getNoSyncedBranches();
+                    if (trees == null) {
+                        trees = bll.getNoSyncedTrees();
                     }
-                    if (branches.size() > 0) {
-                        syncBranch(branches.get(0));
+                    if (trees.size() > 0) {
+                        syncTree(trees.get(0));
                     } else {
-                        if (frames == null) {
-                            frames = bll.getNoSyncedFrames();
+                        if (branches == null) {
+                            branches = bll.getNoSyncedBranches();
                         }
-                        if (frames.size() > 0) {
-                            syncFrame(frames.get(0));
+                        if (branches.size() > 0) {
+                            syncBranch(branches.get(0));
                         } else {
-                            Log.v("LXT", "Todo sincronizado");
+                            if (frames == null) {
+                                frames = bll.getNoSyncedFrames();
+                            }
+                            if (frames.size() > 0) {
+                                syncFrame(frames.get(0));
+                            } else {
+                                Log.v("LXT", "Todo sincronizado");
+                            }
                         }
                     }
                 }
@@ -111,7 +120,7 @@ public class SyncService extends IntentService {
 
             @Override
             public void onFailure(Throwable t) {
-
+                Log.v("LXT","Error");
             }
         });
 
@@ -146,6 +155,31 @@ public class SyncService extends IntentService {
                         Intent i = new Intent("SYNC_FINISHED_BATCH_" + coffeeBatch.Id.toString());
                         sendBroadcast(i);
                         batches.remove(0);
+                        nextSync();
+                    }
+                } else {
+                }
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+    }
+
+    public void syncCoordinate(final CoffeeLatLng coffeeLatLng) {
+        Call<DefaultResponse> call = repo.PostCoordinate(coffeeLatLng);
+        call.enqueue(new Callback<DefaultResponse>() {
+            @Override
+            public void onResponse(Response<DefaultResponse> response, Retrofit retrofit) {
+                if (response != null && response.isSuccess()) {
+                    if (response.body().id != null) {
+                        bll.updateSyncCoordinate(coffeeLatLng.Id);
+                        Intent i = new Intent("SYNC_FINISHED_COORDINATE_" + coffeeLatLng.Id.toString());
+                        sendBroadcast(i);
+                        coordinates.remove(0);
                         nextSync();
                     }
                 } else {
@@ -235,7 +269,7 @@ public class SyncService extends IntentService {
             public void onResponse(Response<DefaultResponse> response, Retrofit retrofit) {
                 if (response != null && response.isSuccess()) {
                     if (response.body().id != null) {
-                        bll.updateSyncFrame(coffeeFrame.Id, response.body().id);
+                        bll.updateSyncFrame(coffeeFrame.Id);
                         Intent i = new Intent("SYNC_FINISHED_FRAME_" + coffeeFrame.Id.toString());
                         sendBroadcast(i);
                         frames.remove(0);
